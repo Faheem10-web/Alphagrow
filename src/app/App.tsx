@@ -792,8 +792,8 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
           }}
         >
 
-          {/* ── UNIFIED HEADER & COMPACT SCROLL NAVIGATION AREA (Home & Categories pages) ───────────── */}
-          {(activeNav === "home" || activeNav === "categories") && (
+          {/* ── UNIFIED HEADER & COMPACT SCROLL NAVIGATION AREA (Home page only) ───────────── */}
+          {activeNav === "home" && (
             <div
               className="flex-shrink-0 relative transition-all duration-300 ease-in-out z-30"
               onWheel={(e) => {
@@ -953,67 +953,65 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               </div>
 
               {/* Category Navigation Bar (Compact height & 16px icon size on scroll) */}
-              {activeNav === "home" && (
-                <div
-                  className="transition-all duration-300 ease-in-out"
-                  style={{
-                    paddingTop: isScrolled ? 2 : 6,
-                    paddingBottom: isScrolled ? 4 : 10,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                  }}
-                >
-                  <div className="flex overflow-x-auto hide-sb items-center" style={{ gap: isScrolled ? 10 : 8 }}>
-                    {QUICK_CATS.map(cat => {
-                      const active = activeCat === cat.id;
-                      const itemColor = isScrolled
-                        ? (active ? TEAL : "#475569")
-                        : (active ? "#FFFFFF" : "rgba(255, 255, 255, 0.85)");
+              <div
+                className="transition-all duration-300 ease-in-out"
+                style={{
+                  paddingTop: isScrolled ? 2 : 6,
+                  paddingBottom: isScrolled ? 4 : 10,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                }}
+              >
+                <div className="flex overflow-x-auto hide-sb items-center" style={{ gap: isScrolled ? 10 : 8 }}>
+                  {QUICK_CATS.map(cat => {
+                    const active = activeCat === cat.id;
+                    const itemColor = isScrolled
+                      ? (active ? TEAL : "#475569")
+                      : (active ? "#FFFFFF" : "rgba(255, 255, 255, 0.85)");
 
-                      return (
-                        <button
-                          key={cat.id}
-                          className="flex-shrink-0 flex flex-col items-center justify-center relative transition-all duration-300 ease-in-out"
+                    return (
+                      <button
+                        key={cat.id}
+                        className="flex-shrink-0 flex flex-col items-center justify-center relative transition-all duration-300 ease-in-out"
+                        style={{
+                          padding: isScrolled ? "2px 2px" : "4px 2px",
+                          minWidth: 58
+                        }}
+                        onClick={() => setActiveCat(cat.id)}
+                      >
+                        {/* Small Icon sitting directly above text label */}
+                        <div className="flex items-center justify-center mb-0.5 transition-all duration-300">
+                          <QuickIcon id={cat.id} active={active} color={itemColor} size={isScrolled ? 16 : 20} />
+                        </div>
+
+                        {/* Category Label */}
+                        <span
+                          className="transition-all duration-300 whitespace-nowrap"
                           style={{
-                            padding: isScrolled ? "2px 2px" : "4px 2px",
-                            minWidth: 58
+                            fontSize: isScrolled ? 11 : 11.5,
+                            fontWeight: active ? (isScrolled ? 700 : 600) : 500,
+                            color: itemColor,
+                            fontFamily: "'Inter', sans-serif"
                           }}
-                          onClick={() => setActiveCat(cat.id)}
                         >
-                          {/* Small Icon sitting directly above text label */}
-                          <div className="flex items-center justify-center mb-0.5 transition-all duration-300">
-                            <QuickIcon id={cat.id} active={active} color={itemColor} size={isScrolled ? 16 : 20} />
-                          </div>
+                          {cat.label}
+                        </span>
 
-                          {/* Category Label */}
-                          <span
-                            className="transition-all duration-300 whitespace-nowrap"
-                            style={{
-                              fontSize: isScrolled ? 11 : 11.5,
-                              fontWeight: active ? (isScrolled ? 700 : 600) : 500,
-                              color: itemColor,
-                              fontFamily: "'Inter', sans-serif"
-                            }}
-                          >
-                            {cat.label}
-                          </span>
-
-                          {/* Active Underline Pill Bar */}
-                          <span
-                            className="rounded-full transition-all duration-300 mt-1"
-                            style={{
-                              width: active ? "100%" : 0,
-                              height: isScrolled ? 2 : 2.5,
-                              backgroundColor: isScrolled ? TEAL : "#FFFFFF",
-                              opacity: active ? 1 : 0
-                            }}
-                          />
-                        </button>
-                      );
-                    })}
-                  </div>
+                        {/* Active Underline Pill Bar */}
+                        <span
+                          className="rounded-full transition-all duration-300 mt-1"
+                          style={{
+                            width: active ? "100%" : 0,
+                            height: isScrolled ? 2 : 2.5,
+                            backgroundColor: isScrolled ? TEAL : "#FFFFFF",
+                            opacity: active ? 1 : 0
+                          }}
+                        />
+                      </button>
+                    );
+                  })}
                 </div>
-              )}
+              </div>
             </div>
           )}
 
@@ -1089,6 +1087,8 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                   else setActiveCat("all");
                   setActiveNav("home");
                 }}
+                cartCount={cartCount}
+                onOpenCart={() => setShowCart(true)}
               />
             ) : searchQuery.trim() !== "" ? (
               <div className="p-4">

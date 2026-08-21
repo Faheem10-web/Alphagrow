@@ -1,5 +1,5 @@
 import React from "react";
-import { Search } from "lucide-react";
+import { Search, ShoppingCart, User, MapPin, ChevronDown } from "lucide-react";
 
 // Asset imports
 import imgFruitsVeg from "../../assets/categories/cat_fruits_veg.jpg";
@@ -161,12 +161,89 @@ export const CATEGORY_SECTIONS: SectionData[] = [
 interface CategoriesPageProps {
   onBack?: () => void;
   onSelectCategory?: (catId: string, catName: string) => void;
+  cartCount?: number;
+  onOpenCart?: () => void;
 }
 
-export default function CategoriesPage({ onBack, onSelectCategory }: CategoriesPageProps) {
+export default function CategoriesPage({
+  onBack,
+  onSelectCategory,
+  cartCount = 0,
+  onOpenCart
+}: CategoriesPageProps) {
   return (
     <div className="w-full bg-white text-gray-900 select-none">
+      <header className="sticky top-0 z-30 bg-white border-b border-gray-100 flex flex-col pt-1.5">
+        {/* Row 1: Brand & Icons */}
+        <div className="flex items-center justify-between px-4 pt-2 pb-1.5">
+          <span 
+            className="text-gray-900"
+            style={{
+              fontSize: 22,
+              fontWeight: 800,
+              fontFamily: "'Inter', sans-serif",
+              letterSpacing: "-0.03em",
+              color: "#111827"
+            }}
+          >
+            8 minutes
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              className="relative w-9 h-9 bg-gray-100 hover:bg-gray-200 active:scale-95 border border-gray-200 text-gray-800 rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer"
+              onClick={onOpenCart}
+              title="Cart"
+            >
+              <ShoppingCart style={{ width: 19, height: 19, color: "#1f2937" }} />
+              {cartCount > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 bg-amber-500 text-white font-black rounded-full flex items-center justify-center border-2 border-white shadow-md"
+                  style={{ minWidth: 17, height: 17, fontSize: 9, padding: "0 3px" }}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </button>
+            <button
+              className="w-9 h-9 bg-gray-100 hover:bg-gray-200 active:scale-95 border border-gray-200 text-gray-800 rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer"
+              title="Profile"
+            >
+              <User style={{ width: 19, height: 19, color: "#1f2937" }} />
+            </button>
+          </div>
+        </div>
 
+        {/* Row 2: Location banner */}
+        <div className="flex items-center justify-between px-4 pb-2">
+          <button className="flex items-center gap-1.5 group text-gray-700 cursor-pointer">
+            <MapPin style={{ width: 16, height: 16, color: "#4b5563" }} />
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#374151", fontFamily: "'Inter', sans-serif" }}>
+              HOME - Chelambra, Kerala
+            </span>
+            <ChevronDown style={{ width: 15, height: 15, color: "#4b5563", opacity: 0.9 }} />
+          </button>
+          <span style={{ color: "#4b5563", fontSize: 13, fontWeight: 500 }}>
+            14-Aug
+          </span>
+        </div>
+
+        {/* Row 3: Categories & Search Icon */}
+        <div className="px-4 py-2.5 flex items-center justify-between border-t border-gray-100">
+          <h1
+            className="text-[20px] font-bold text-[#111827] tracking-tight"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          >
+            Categories
+          </h1>
+
+          <button
+            className="p-1.5 text-gray-900 active:scale-90 transition-transform cursor-pointer"
+            aria-label="Search"
+          >
+            <Search className="w-5.5 h-5.5 stroke-[2.2]" />
+          </button>
+        </div>
+      </header>
 
       {/* ── 4 SECTIONS WITH 4-COLUMN GRID ──────────────────────────────────── */}
       <main className="px-3.5 pt-1.5 pb-3 space-y-4.5">
