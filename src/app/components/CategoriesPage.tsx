@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowLeft, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 // Asset imports
 import imgFruitsVeg from "../../assets/categories/cat_fruits_veg.jpg";
@@ -166,29 +166,19 @@ interface CategoriesPageProps {
 export default function CategoriesPage({ onBack, onSelectCategory }: CategoriesPageProps) {
   return (
     <div className="w-full bg-white text-gray-900 select-none">
-      {/* ── HEADER ────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 bg-white px-4 pt-3.5 pb-2.5 flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <button
-            onClick={onBack}
-            className="p-1 -ml-1 text-gray-900 active:scale-90 transition-transform cursor-pointer"
-            aria-label="Go Back"
-          >
-            <ArrowLeft className="w-6 h-6 stroke-[2.2]" />
-          </button>
-          <h1
-            className="text-[21px] font-bold text-[#111827] tracking-tight"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            All Categories
-          </h1>
-        </div>
+      <header className="sticky top-0 z-30 bg-white px-4 pt-3.5 pb-2.5 flex items-center justify-between border-b border-gray-100">
+        <h1
+          className="text-[20px] font-bold text-[#111827] tracking-tight"
+          style={{ fontFamily: "'Inter', sans-serif" }}
+        >
+          Categories
+        </h1>
 
         <button
           className="p-1.5 text-gray-900 active:scale-90 transition-transform cursor-pointer"
           aria-label="Search"
         >
-          <Search className="w-5 h-5 stroke-[2.2]" />
+          <Search className="w-5.5 h-5.5 stroke-[2.2]" />
         </button>
       </header>
 
