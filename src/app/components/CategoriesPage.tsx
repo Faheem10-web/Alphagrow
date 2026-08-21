@@ -177,31 +177,36 @@ export default function CategoriesPage({
 }: CategoriesPageProps) {
   return (
     <div className="w-full bg-white text-gray-900 select-none">
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-100 flex flex-col pt-1.5">
+      <header
+        className="sticky top-0 z-30 flex flex-col pt-1.5"
+        style={{
+          background: "linear-gradient(180deg, #02616A 0%, #02616A 70%, #014f57 100%)",
+          boxShadow: "0 8px 30px rgba(2, 97, 106, 0.25)",
+        }}
+      >
         {/* Row 1: Brand & Icons */}
         <div className="flex items-center justify-between px-4 pt-2 pb-1.5">
           <span 
-            className="text-gray-900"
+            className="text-white"
             style={{
               fontSize: 22,
               fontWeight: 800,
               fontFamily: "'Inter', sans-serif",
               letterSpacing: "-0.03em",
-              color: "#111827"
             }}
           >
             8 minutes
           </span>
           <div className="flex items-center gap-2">
             <button
-              className="relative w-9 h-9 bg-gray-100 hover:bg-gray-200 active:scale-95 border border-gray-200 text-gray-800 rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer"
+              className="relative w-9 h-9 bg-white/10 hover:bg-white/20 active:scale-95 border border-white/20 text-white rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer"
               onClick={onOpenCart}
               title="Cart"
             >
-              <ShoppingCart style={{ width: 19, height: 19, color: "#1f2937" }} />
+              <ShoppingCart style={{ width: 19, height: 19, color: "white" }} />
               {cartCount > 0 && (
                 <span
-                  className="absolute -top-1 -right-1 bg-amber-500 text-white font-black rounded-full flex items-center justify-center border-2 border-white shadow-md"
+                  className="absolute -top-1 -right-1 bg-amber-500 text-white font-black rounded-full flex items-center justify-center border-2 border-[#005361] shadow-md"
                   style={{ minWidth: 17, height: 17, fontSize: 9, padding: "0 3px" }}
                 >
                   {cartCount}
@@ -209,24 +214,24 @@ export default function CategoriesPage({
               )}
             </button>
             <button
-              className="w-9 h-9 bg-gray-100 hover:bg-gray-200 active:scale-95 border border-gray-200 text-gray-800 rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer"
+              className="w-9 h-9 bg-white/10 hover:bg-white/20 active:scale-95 border border-white/20 text-white rounded-full flex items-center justify-center transition-all shadow-sm cursor-pointer"
               title="Profile"
             >
-              <User style={{ width: 19, height: 19, color: "#1f2937" }} />
+              <User style={{ width: 19, height: 19, color: "white" }} />
             </button>
           </div>
         </div>
 
         {/* Row 2: Location banner */}
         <div className="flex items-center justify-between px-4 pb-2">
-          <button className="flex items-center gap-1.5 group text-gray-700 cursor-pointer">
-            <MapPin style={{ width: 16, height: 16, color: "#4b5563" }} />
-            <span style={{ fontSize: 14, fontWeight: 600, color: "#374151", fontFamily: "'Inter', sans-serif" }}>
+          <button className="flex items-center gap-1.5 group text-white cursor-pointer">
+            <MapPin style={{ width: 16, height: 16, color: "white" }} />
+            <span style={{ fontSize: 14, fontWeight: 600, color: "#FFFFFF", fontFamily: "'Inter', sans-serif" }}>
               HOME - Chelambra, Kerala
             </span>
-            <ChevronDown style={{ width: 15, height: 15, color: "#4b5563", opacity: 0.9 }} />
+            <ChevronDown style={{ width: 15, height: 15, color: "white", opacity: 0.9 }} />
           </button>
-          <span style={{ color: "#4b5563", fontSize: 13, fontWeight: 500 }}>
+          <span style={{ color: "rgba(255, 255, 255, 0.95)", fontSize: 13, fontWeight: 500 }}>
             14-Aug
           </span>
         </div>
@@ -239,7 +244,7 @@ export default function CategoriesPage({
               height: 42,
               padding: "0 14px",
               backgroundColor: "#FFFFFF",
-              border: "1px solid #e2e8f0"
+              border: "1px solid rgba(255,255,255,0.4)"
             }}
           >
             <Search style={{ width: 18, height: 18, color: "#02616A", flexShrink: 0 }} />
@@ -267,7 +272,6 @@ export default function CategoriesPage({
             </div>
           </div>
         </div>
-
       </header>
 
       {/* ── 4 SECTIONS WITH 4-COLUMN GRID ──────────────────────────────────── */}
