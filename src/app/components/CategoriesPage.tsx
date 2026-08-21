@@ -166,21 +166,7 @@ interface CategoriesPageProps {
 export default function CategoriesPage({ onBack, onSelectCategory }: CategoriesPageProps) {
   return (
     <div className="w-full bg-white text-gray-900 select-none">
-      <header className="sticky top-0 z-30 bg-white px-4 pt-3.5 pb-2.5 flex items-center justify-between border-b border-gray-100">
-        <h1
-          className="text-[20px] font-bold text-[#111827] tracking-tight"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
-          Categories
-        </h1>
 
-        <button
-          className="p-1.5 text-gray-900 active:scale-90 transition-transform cursor-pointer"
-          aria-label="Search"
-        >
-          <Search className="w-5.5 h-5.5 stroke-[2.2]" />
-        </button>
-      </header>
 
       {/* ── 4 SECTIONS WITH 4-COLUMN GRID ──────────────────────────────────── */}
       <main className="px-3.5 pt-1.5 pb-3 space-y-4.5">
