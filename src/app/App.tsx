@@ -8,7 +8,7 @@ import banner1 from "../assets/b-1.png";
 import bsmall from "../assets/b-small.png";
 // import logo from "../assets/logo.png";
 import pocoBanner from "../assets/poco_banner.png";
-import bannerImg from "../assets/bt.png";
+import bannerImg from "../assets/newb.png";
 import demoImg from "../assets/demo.png";
 import imgChips from "../assets/multigrain_chips.jpg";
 import imgCoffee from "../assets/bru_coffee.jpg";
