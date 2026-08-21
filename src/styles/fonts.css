@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+@keyframes bannerMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-banner-marquee {
+  display: flex;
+  width: max-content;
+  animation: bannerMarquee 14s linear infinite;
+}
+
+.animate-banner-marquee:hover,
+.animate-banner-marquee:active {
+  animation-play-state: paused;
+}
