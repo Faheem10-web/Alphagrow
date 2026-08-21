@@ -43,6 +43,7 @@ import popCatHome from "../assets/pop_cat_home.png";
 import popCatBaby from "../assets/pop_cat_baby.png";
 import popCatMasala from "../assets/pop_cat_masala.png";
 import CategoriesPage from "./components/CategoriesPage";
+import LoyaltyPage from "./components/LoyaltyPage";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -1073,7 +1074,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
           }}
         >
           {/* Content Container */}
-          <div className={activeNav === "categories" ? "bg-white" : "bg-white pb-6 min-h-full"}>
+          <div className={(activeNav === "categories" || activeNav === "loyalty") ? "bg-white" : "bg-white pb-6 min-h-full"}>
             {activeNav === "categories" ? (
               <CategoriesPage
                 onBack={() => setActiveNav("home")}
@@ -1091,6 +1092,11 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                 onOpenCart={() => setShowCart(true)}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
+              />
+            ) : activeNav === "loyalty" ? (
+              <LoyaltyPage
+                cartCount={cartCount}
+                onOpenCart={() => setShowCart(true)}
               />
             ) : searchQuery.trim() !== "" ? (
               <div className="p-4">
