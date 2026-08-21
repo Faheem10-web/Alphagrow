@@ -181,7 +181,6 @@ export default function CategoriesPage({
         className="sticky top-0 z-30 flex flex-col pt-1.5"
         style={{
           background: "linear-gradient(180deg, #02616A 0%, #02616A 70%, #014f57 100%)",
-          boxShadow: "0 8px 30px rgba(2, 97, 106, 0.25)",
         }}
       >
         {/* Row 1: Brand & Icons */}
