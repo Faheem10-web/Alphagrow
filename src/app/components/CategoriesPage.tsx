@@ -268,15 +268,6 @@ export default function CategoriesPage({
           </div>
         </div>
 
-        {/* Row 4: Categories title (No redundant search icon) */}
-        <div className="px-4 py-2.5 flex items-center justify-between border-t border-gray-100">
-          <h1
-            className="text-[20px] font-bold text-[#111827] tracking-tight"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            Categories
-          </h1>
-        </div>
       </header>
 
       {/* ── 4 SECTIONS WITH 4-COLUMN GRID ──────────────────────────────────── */}
