@@ -163,74 +163,66 @@ const PRODUCTS_DEALS: Product[] = [
 
 const ALL_PRODUCTS = [...PRODUCTS_NEW, ...PRODUCTS_BEST, ...PRODUCTS_DEALS];
 
-const PROMO_CARDS_6 = [
+const PROMO_CARDS_10 = [
   {
-    id: "card-1",
-    title: "Fresh Picks",
-    subtitle: "Fresh every day",
-    offer: "UP TO 40% OFF",
-    bg: "linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 50%, #FED7AA 100%)",
-    badgeBg: "#EA580C",
-    textColor: "#005361",
-    subColor: "#64748B",
+    id: "promo-1",
+    title: "Fresh Veggies",
     img: imgVeggies,
+    offer: "UP TO 40% OFF",
   },
   {
-    id: "card-2",
-    title: "Pantry Restock",
-    subtitle: "Stock up & save",
-    offer: "UP TO 35% OFF",
-    bg: "linear-gradient(135deg, #FEFCE8 0%, #FEF9C3 50%, #FEF08A 100%)",
-    badgeBg: "#CA8A04",
-    textColor: "#005361",
-    subColor: "#64748B",
-    img: imgOil,
-  },
-  {
-    id: "card-3",
-    title: "Breakfast Favourites",
-    subtitle: "Start fresh every day",
-    offer: "FROM ₹49",
-    bg: "linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #BAE6FD 100%)",
-    badgeBg: "#0284C7",
-    textColor: "#005361",
-    subColor: "#64748B",
+    id: "promo-2",
+    title: "Organic Milk",
     img: imgMilk,
+    offer: "FROM ₹49",
   },
   {
-    id: "card-4",
-    title: "Snack Time",
-    subtitle: "Treat yourself today",
-    offer: "UP TO 25% OFF",
-    bg: "linear-gradient(135deg, #FFF1F2 0%, #FFE4E6 50%, #FECDD3 100%)",
-    badgeBg: "#E11D48",
-    textColor: "#005361",
-    subColor: "#64748B",
+    id: "promo-3",
+    title: "Whole Atta",
+    img: imgAtta,
+    offer: "LIMITED STOCK",
+  },
+  {
+    id: "promo-4",
+    title: "Cooking Oils",
+    img: imgOil,
+    offer: "FROM ₹119",
+  },
+  {
+    id: "promo-5",
+    title: "Potato Chips",
     img: imgChips,
+    offer: "UP TO 30% OFF",
   },
   {
-    id: "card-5",
-    title: "Daily Essentials",
-    subtitle: "Everything you need",
-    offer: "DEALS FROM ₹49",
-    bg: "linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 50%, #BBF7D0 100%)",
-    badgeBg: "#0D9488",
-    textColor: "#005361",
-    subColor: "#64748B",
+    id: "promo-6",
+    title: "Farm Eggs",
+    img: imgEggs,
+    offer: "NEW LAUNCH",
+  },
+  {
+    id: "promo-7",
+    title: "Pure Honey",
     img: imgHoney,
+    offer: "UP TO 35% OFF",
   },
   {
-    id: "card-6",
-    title: "Onam Specials",
-    subtitle: "Celebrate with fresh picks",
-    offer: "UP TO 50% OFF",
-    bg: "linear-gradient(135deg, #005361 0%, #004450 50%, #003640 100%)",
-    badgeBg: "#EAB308",
-    badgeTextColor: "#005361",
-    textColor: "#FFFFFF",
-    subColor: "rgba(255, 255, 255, 0.85)",
+    id: "promo-8",
+    title: "Matta Rice",
     img: imgRice,
-    isOnam: true,
+    offer: "UP TO 20% OFF",
+  },
+  {
+    id: "promo-9",
+    title: "Bru Coffee",
+    img: imgCoffee,
+    offer: "FROM ₹99",
+  },
+  {
+    id: "promo-10",
+    title: "Loose Tea",
+    img: imgTea,
+    offer: "UP TO 25% OFF",
   },
 ];
 
@@ -1166,10 +1158,10 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               </div>
             ) : (
               <>
-                {/* FEATURED ONAM BANNER WITH 6 PROMO CARDS (Natural Scroll, NO Shrinking Height Animation) */}
+                {/* FEATURED ONAM BANNER */}
                 <div
-                  className="w-full relative overflow-hidden"
-                  style={{ height: 230 }}
+                  className="w-full relative overflow-hidden animate-fade-in"
+                  style={{ height: 130 }}
                 >
                   {/* Background Banner Image */}
                   <img
@@ -1177,73 +1169,70 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                     alt="Onam Sale Up to 80% Off"
                     className="w-full h-full object-cover object-center block"
                   />
+                </div>
 
-                  {/* 6 Premium Grocery Promotional Cards */}
-                  <div className="absolute bottom-2 left-0 right-0 overflow-x-auto hide-sb z-10 py-1">
-                    <div className="flex gap-2.5 items-center px-3">
-                      {PROMO_CARDS_6.map(card => (
+                {/* 2-Row Horizontal Scroll Grid (Grocery Cards matching First Image Style 100% Perfect) */}
+                <div
+                  className="w-full overflow-x-auto hide-sb py-3 px-3.5"
+                  style={{ backgroundColor: "#D5D6FB" }}
+                >
+                  <div
+                    className="grid grid-rows-2 grid-flow-col gap-2.5"
+                    style={{ width: "max-content" }}
+                  >
+                    {PROMO_CARDS_10.map((card) => (
+                      <div
+                        key={card.id}
+                        className="bg-white rounded-2xl flex flex-col justify-between items-center relative overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_4px_10px_rgba(0,0,0,0.04)] border border-[#E0E2FF] cursor-pointer"
+                        style={{
+                          width: 96,
+                          height: 108,
+                        }}
+                      >
+                        {/* Title at the Top */}
+                        <div className="w-full pt-2 px-1 text-center h-8 flex items-center justify-center">
+                          <p
+                            className="font-extrabold leading-tight tracking-tight text-[#2E2A72] text-[10.5px]"
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                            }}
+                          >
+                            {card.title}
+                          </p>
+                        </div>
+
+                        {/* Product Image in the Middle */}
+                        <div className="flex-1 w-full flex items-center justify-center p-1.5 overflow-hidden my-0.5">
+                          <img
+                            src={card.img}
+                            alt={card.title}
+                            className="w-full h-full object-contain transition-transform duration-300 hover:scale-110"
+                            style={{
+                              maxHeight: 48,
+                              mixBlendMode: "multiply",
+                              filter: "contrast(1.04) brightness(0.99)",
+                            }}
+                          />
+                        </div>
+
+                        {/* Lime Green Banner at the Bottom */}
                         <div
-                          key={card.id}
-                          className="flex-shrink-0 rounded-2xl overflow-hidden relative flex flex-col justify-between transition-all duration-300 hover:scale-105 active:scale-95 border"
+                          className="w-full h-5.5 flex items-center justify-center rounded-b-2xl mt-auto"
                           style={{
-                            width: 105,
-                            height: 106,
-                            background: card.bg,
-                            padding: "8px 8px 5px",
-                            borderColor: card.isOnam ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.8)",
-                            boxShadow: "0 6px 16px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.85)",
+                            backgroundColor: "#bef264",
                           }}
                         >
-                          {/* Top/Left Text Hierarchy */}
-                          <div className="z-10 relative pr-1">
-                            <p
-                              className="font-bold leading-tight tracking-tight line-clamp-1"
-                              style={{
-                                fontSize: 10.5,
-                                color: card.textColor,
-                                fontFamily: "'Inter', sans-serif",
-                              }}
-                            >
-                              {card.title}
-                            </p>
-                            <p
-                              className="leading-tight mt-0.5 line-clamp-1"
-                              style={{
-                                fontSize: 7.5,
-                                color: card.subColor,
-                                fontFamily: "'Inter', sans-serif",
-                              }}
-                            >
-                              {card.subtitle}
-                            </p>
-                            <div
-                              className="inline-block rounded-md font-bold uppercase tracking-wider mt-1.5 px-1.5 py-0.5 shadow-xs"
-                              style={{
-                                fontSize: 7,
-                                backgroundColor: card.badgeBg,
-                                color: card.badgeTextColor || "#FFFFFF",
-                                fontFamily: "'Inter', sans-serif",
-                              }}
-                            >
-                              {card.offer}
-                            </div>
-                          </div>
-
-                          {/* Lower/Right Product Photography with Soft Oil-Pastel Blend */}
-                          <div className="relative w-full h-[54px] mt-auto overflow-hidden flex items-end justify-end">
-                            <img
-                              src={card.img}
-                              alt={card.title}
-                              className="w-[68px] h-[54px] object-contain object-bottom transition-transform duration-300 hover:scale-110"
-                              style={{
-                                mixBlendMode: card.isOnam ? "normal" : "multiply",
-                                filter: card.isOnam ? "drop-shadow(0 4px 6px rgba(0,0,0,0.3))" : "contrast(1.05) brightness(0.98)",
-                              }}
-                            />
-                          </div>
+                          <p
+                            className="font-black text-[#1F2937] text-[8px] uppercase tracking-wider text-center"
+                            style={{
+                              fontFamily: "'Inter', sans-serif",
+                            }}
+                          >
+                            {card.offer}
+                          </p>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
