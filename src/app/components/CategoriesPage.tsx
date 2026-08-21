@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, ShoppingCart, User, MapPin, ChevronDown } from "lucide-react";
+import { Search, ShoppingCart, User, MapPin, ChevronDown, Mic, Camera } from "lucide-react";
 
 // Asset imports
 import imgFruitsVeg from "../../assets/categories/cat_fruits_veg.jpg";
@@ -163,13 +163,17 @@ interface CategoriesPageProps {
   onSelectCategory?: (catId: string, catName: string) => void;
   cartCount?: number;
   onOpenCart?: () => void;
+  searchQuery?: string;
+  onSearchChange?: (val: string) => void;
 }
 
 export default function CategoriesPage({
   onBack,
   onSelectCategory,
   cartCount = 0,
-  onOpenCart
+  onOpenCart,
+  searchQuery = "",
+  onSearchChange
 }: CategoriesPageProps) {
   return (
     <div className="w-full bg-white text-gray-900 select-none">
@@ -227,7 +231,44 @@ export default function CategoriesPage({
           </span>
         </div>
 
-        {/* Row 3: Categories & Search Icon */}
+        {/* Row 3: Search Bar Row */}
+        <div className="px-3.5 pb-2.5">
+          <div
+            className="w-full rounded-2xl flex items-center gap-2 shadow-sm overflow-hidden"
+            style={{
+              height: 42,
+              padding: "0 14px",
+              backgroundColor: "#FFFFFF",
+              border: "1px solid #e2e8f0"
+            }}
+          >
+            <Search style={{ width: 18, height: 18, color: "#02616A", flexShrink: 0 }} />
+            <input
+              className="flex-1 bg-transparent outline-none text-gray-800 text-[13.5px] font-normal placeholder:text-gray-400 placeholder:font-normal"
+              placeholder="Search groceries, fruits, snacks..."
+              value={searchQuery}
+              onChange={e => onSearchChange?.(e.target.value)}
+            />
+            <div
+              className="flex items-center overflow-hidden flex-shrink-0"
+              style={{
+                paddingLeft: 8,
+                borderLeft: "1px solid #e2e8f0",
+              }}
+            >
+              <div className="flex items-center gap-1.5">
+                <button className="p-1 hover:bg-teal-50 rounded-lg text-teal-800 transition-colors cursor-pointer" title="Voice Search">
+                  <Mic style={{ width: 17, height: 17, color: "#02616A" }} />
+                </button>
+                <button className="p-1 hover:bg-teal-50 rounded-lg text-teal-800 transition-colors cursor-pointer" title="Scan Barcode">
+                  <Camera style={{ width: 17, height: 17, color: "#02616A" }} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Row 4: Categories title (No redundant search icon) */}
         <div className="px-4 py-2.5 flex items-center justify-between border-t border-gray-100">
           <h1
             className="text-[20px] font-bold text-[#111827] tracking-tight"
@@ -235,13 +276,6 @@ export default function CategoriesPage({
           >
             Categories
           </h1>
-
-          <button
-            className="p-1.5 text-gray-900 active:scale-90 transition-transform cursor-pointer"
-            aria-label="Search"
-          >
-            <Search className="w-5.5 h-5.5 stroke-[2.2]" />
-          </button>
         </div>
       </header>
 

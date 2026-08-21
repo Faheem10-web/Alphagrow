@@ -1089,6 +1089,8 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                 }}
                 cartCount={cartCount}
                 onOpenCart={() => setShowCart(true)}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
               />
             ) : searchQuery.trim() !== "" ? (
               <div className="p-4">
