@@ -43,7 +43,7 @@ import popCatHome from "../assets/pop_cat_home.png";
 import popCatBaby from "../assets/pop_cat_baby.png";
 import popCatMasala from "../assets/pop_cat_masala.png";
 import CategoriesPage from "./components/CategoriesPage";
-import LoyaltyPage from "./components/LoyaltyPage";
+import ProductDetailsPage from "./components/ProductDetailsPage";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -139,6 +139,7 @@ const POP_CATS = [
 ];
 
 const PRODUCTS_NEW: Product[] = [
+  { id: "ladies-fingers", name: "Ladies' Fingers", weight: "500 g", price: 30, originalPrice: 48.75, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" },
   { id: "p1", name: "Premium Sunflower Oil",weight: "1 L",  price: 119, originalPrice: 180, discount: 34, badge: "NEW",   desc: "100% Pure & Refined | Cold Pressed", img: imgNewSunflowerOil },
   { id: "p2", name: "Whole Wheat Atta",    weight: "5 kg",  price: 199, originalPrice: 275, discount: 27, badge: "NEW",   desc: "Chakki Fresh | 100% Whole Wheat", img: imgNewWheatAtta },
   { id: "p3", name: "Organic Milk",        weight: "1 L",   price: 75,  originalPrice: 90,  discount: 17, badge: "NEW",   desc: "Pasteurized | Certified Organic", img: imgNewOrganicMilk },
@@ -147,6 +148,7 @@ const PRODUCTS_NEW: Product[] = [
 ];
 
 const PRODUCTS_BEST: Product[] = [
+  { id: "ladies-fingers", name: "Ladies' Fingers", weight: "500 g", price: 30, originalPrice: 48.75, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" },
   { id: "bs1", name: "BRU Instant Coffee",  weight: "200 g", price: 299, originalPrice: 379, discount: 21, badge: "OFFER", desc: "Rich Aroma | 100% Pure Coffee",   img: imgCoffee },
   { id: "bs2", name: "Organic Milk",        weight: "1 L",   price: 75,  originalPrice: 90,  discount: 17, badge: "OFFER", desc: "Pasteurized | Certified Organic", img: imgMilk },
   { id: "bs3", name: "Fresh Veggie Pack",   weight: "500 g", price: 75,  originalPrice: 95,  discount: 21, badge: "BEST",  desc: "Tomatoes · Carrots · Capsicum",   img: imgVeggies },
@@ -162,7 +164,13 @@ const PRODUCTS_DEALS: Product[] = [
   { id: "d5", name: "Premium Sunflower Oil",weight: "1 L",  price: 119, originalPrice: 180, discount: 34, badge: "OFFER", desc: "100% Pure & Refined | Cold Pressed", img: imgOil },
 ];
 
-const ALL_PRODUCTS = [...PRODUCTS_NEW, ...PRODUCTS_BEST, ...PRODUCTS_DEALS];
+const ALL_PRODUCTS = [
+  ...PRODUCTS_NEW,
+  ...PRODUCTS_BEST,
+  ...PRODUCTS_DEALS,
+  { id: "ladies-fingers-500g", name: "Ladies' Fingers", weight: "500 g", price: 30, originalPrice: 48.75, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" },
+  { id: "ladies-fingers-250g", name: "Ladies' Fingers", weight: "250 g", price: 15.5, originalPrice: 25, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" }
+];
 
 const PROMO_CARDS_6 = [
   {
@@ -575,6 +583,55 @@ function ProductSheet({
   );
 }
 
+// Helper to resolve product details including dynamic alt sizes (ending with -alt)
+const resolveProduct = (id: string): Product | undefined => {
+  // 1. Try exact match
+  const p = ALL_PRODUCTS.find(p => p.id === id);
+  if (p) return p;
+
+  // 2. Handle alt sizes (ending with -alt)
+  if (id.endsWith("-alt")) {
+    const baseId = id.substring(0, id.length - 4);
+    const base = ALL_PRODUCTS.find(p => p.id === baseId);
+    if (base) {
+      const baseWeight = base.weight;
+      const numMatch = baseWeight.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Z]+)$/);
+      let newWeight = "Alt Size";
+      let newPrice = base.price * 0.52;
+      let newOrig = base.originalPrice * 0.52;
+
+      if (numMatch) {
+        const val = parseFloat(numMatch[1]);
+        const unit = numMatch[2].toLowerCase();
+        if (unit === "g" || unit === "ml") {
+          newWeight = `${Math.round(val / 2)} ${numMatch[2]}`;
+        } else if (unit === "kg" || unit === "l") {
+          newWeight = val === 1 ? `500 ${unit === "kg" ? "g" : "ml"}` : `${Math.round(val / 5)} ${numMatch[2]}`;
+          if (val > 1) {
+            newPrice = base.price * 0.22;
+            newOrig = base.originalPrice * 0.22;
+          }
+        } else {
+          newWeight = `${val * 2} ${numMatch[2]}`;
+          newPrice = base.price * 1.85;
+          newOrig = base.originalPrice * 1.85;
+        }
+      }
+
+      return {
+        ...base,
+        id: id,
+        name: base.name,
+        weight: newWeight,
+        price: parseFloat(newPrice.toFixed(newWeight.includes("250 g") || newWeight.includes("250g") || newPrice % 1 !== 0 ? 2 : 0)),
+        originalPrice: parseFloat(newOrig.toFixed(2)),
+        discount: base.discount,
+      };
+    }
+  }
+  return undefined;
+};
+
 // ─── Cart sheet ───────────────────────────────────────────────────────────────
 
 function CartSheet({
@@ -587,7 +644,7 @@ function CartSheet({
 }) {
   const cartCount = Object.values(cart).reduce((s, v) => s + v, 0);
   const cartValue = Object.entries(cart).reduce((sum, [id, qty]) => {
-    const p = ALL_PRODUCTS.find(p => p.id === id);
+    const p = resolveProduct(id);
     return sum + (p ? p.price * qty : 0);
   }, 0);
 
@@ -621,7 +678,7 @@ function CartSheet({
             </div>
           ) : (
             Object.entries(cart).map(([id, qty]) => {
-              const p = ALL_PRODUCTS.find(p => p.id === id);
+              const p = resolveProduct(id);
               if (!p || qty === 0) return null;
               return (
                 <div key={id} className="flex items-center gap-3 border-b border-gray-50 last:border-0" style={{ padding: "12px 0" }}>
@@ -669,7 +726,13 @@ export default function App() {
   const [activeNav, setActiveNav]       = useState("home");
   const [cart, setCart]                 = useState<Record<string, number>>({});
   const [wish, setWish]                 = useState<Set<string>>(new Set());
-  const [openProduct, setOpenProduct]   = useState<Product | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [activePage, setActivePage]     = useState<"dashboard" | "product-details">("dashboard");
+
+  const handleOpenProduct = (p: Product) => {
+    setSelectedProduct(p);
+    setActivePage("product-details");
+  };
   const [showCart, setShowCart]         = useState(false);
   const [isScrolled, setIsScrolled]     = useState(false);
   const [showBottomNav, setShowBottomNav] = useState(true);
@@ -792,9 +855,19 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
             boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.08)",
           }}
         >
-
-          {/* ── UNIFIED HEADER & COMPACT SCROLL NAVIGATION AREA (Home page only) ───────────── */}
-          {activeNav === "home" && (
+          {activePage === "product-details" && selectedProduct ? (
+            <ProductDetailsPage
+              onBack={() => setActivePage("dashboard")}
+              cart={cart}
+              setCart={setCart}
+              wish={wish}
+              setWish={setWish}
+              product={selectedProduct}
+            />
+          ) : (
+            <>
+              {/* ── UNIFIED HEADER & COMPACT SCROLL NAVIGATION AREA (Home page only) ───────────── */}
+              {activeNav === "home" && (
             <div
               className="flex-shrink-0 relative transition-all duration-300 ease-in-out z-30"
               onWheel={(e) => {
@@ -1074,7 +1147,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
           }}
         >
           {/* Content Container */}
-          <div className={(activeNav === "categories" || activeNav === "loyalty") ? "bg-white" : "bg-white pb-6 min-h-full"}>
+          <div className={activeNav === "categories" ? "bg-white" : "bg-white pb-6 min-h-full"}>
             {activeNav === "categories" ? (
               <CategoriesPage
                 onBack={() => setActiveNav("home")}
@@ -1092,11 +1165,6 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                 onOpenCart={() => setShowCart(true)}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
-              />
-            ) : activeNav === "loyalty" ? (
-              <LoyaltyPage
-                cartCount={cartCount}
-                onOpenCart={() => setShowCart(true)}
               />
             ) : searchQuery.trim() !== "" ? (
               <div className="p-4">
@@ -1122,7 +1190,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                         onAdd={addToCart}
                         onSub={subFromCart}
                         onWish={toggleWish}
-                        onOpen={setOpenProduct}
+                        onOpen={handleOpenProduct}
                       />
                     ))}
                   </div>
@@ -1151,8 +1219,8 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                 </div>
                 <div className="grid grid-cols-2 gap-3 justify-items-center mt-2">
                   {ALL_PRODUCTS.filter(p => {
-                    if (activeCat === "fruits") return p.name.toLowerCase().includes("fruit") || p.name.toLowerCase().includes("veggie") || p.id === "p5" || p.id === "bs3";
-                    if (activeCat === "vegetables") return p.name.toLowerCase().includes("veggie") || p.id === "p5" || p.id === "bs3";
+                    if (activeCat === "fruits") return p.name.toLowerCase().includes("fruit") || p.name.toLowerCase().includes("veggie") || p.id === "p5" || p.id === "bs3" || p.id === "ladies-fingers";
+                    if (activeCat === "vegetables") return p.name.toLowerCase().includes("veggie") || p.id === "p5" || p.id === "bs3" || p.id === "ladies-fingers";
                     if (activeCat === "dairy") return p.name.toLowerCase().includes("milk") || p.name.toLowerCase().includes("egg") || p.id === "p3" || p.id === "d2";
                     if (activeCat === "snacks") return p.name.toLowerCase().includes("chip") || p.name.toLowerCase().includes("coffee") || p.id === "p1" || p.id === "p2";
                     if (activeCat === "beverages") return p.name.toLowerCase().includes("coffee") || p.name.toLowerCase().includes("tea") || p.id === "p2" || p.id === "d3";
@@ -1169,7 +1237,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                       onAdd={addToCart}
                       onSub={subFromCart}
                       onWish={toggleWish}
-                      onOpen={setOpenProduct}
+                      onOpen={handleOpenProduct}
                     />
                   ))}
                 </div>
@@ -1322,7 +1390,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               <p style={{ fontSize: 18, fontWeight: 700, lineHeight: "22px", color: "#111827", padding: "0 12px", marginBottom: 10 }}>New Arrivals</p>
               <div className="flex overflow-x-auto hide-sb" style={{ gap: 8, padding: "0 12px 2px" }}>
                 {PRODUCTS_NEW.map(p => (
-                  <ProductCard key={p.id} p={p} cart={cart} wish={wish} onAdd={addToCart} onSub={subFromCart} onWish={toggleWish} onOpen={setOpenProduct} isFullCover={true} />
+                  <ProductCard key={p.id} p={p} cart={cart} wish={wish} onAdd={addToCart} onSub={subFromCart} onWish={toggleWish} onOpen={handleOpenProduct} isFullCover={true} />
                 ))}
               </div>
             </div>
@@ -1389,7 +1457,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               </div>
               <div className="flex overflow-x-auto hide-sb" style={{ gap: 8, padding: "0 12px 2px" }}>
                 {PRODUCTS_BEST.map(p => (
-                  <ProductCard key={p.id} p={p} cart={cart} wish={wish} onAdd={addToCart} onSub={subFromCart} onWish={toggleWish} onOpen={setOpenProduct} />
+                  <ProductCard key={p.id} p={p} cart={cart} wish={wish} onAdd={addToCart} onSub={subFromCart} onWish={toggleWish} onOpen={handleOpenProduct} />
                 ))}
               </div>
             </div>
@@ -1402,7 +1470,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               </div>
               <div className="flex overflow-x-auto hide-sb" style={{ gap: 8, padding: "0 12px 2px" }}>
                 {PRODUCTS_DEALS.map(p => (
-                  <ProductCard key={p.id} p={p} cart={cart} wish={wish} onAdd={addToCart} onSub={subFromCart} onWish={toggleWish} onOpen={setOpenProduct} />
+                  <ProductCard key={p.id} p={p} cart={cart} wish={wish} onAdd={addToCart} onSub={subFromCart} onWish={toggleWish} onOpen={handleOpenProduct} />
                 ))}
               </div>
             </div>
@@ -1444,17 +1512,10 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               );
             })}
           </nav>
+        </>
+      )}
 
-          {/* ── PRODUCT DETAIL SHEET ─────────────────────────────────────── */}
-          {openProduct && (
-            <ProductSheet
-              p={openProduct}
-              cart={cart}
-              onAdd={addToCart}
-              onSub={subFromCart}
-              onClose={() => setOpenProduct(null)}
-            />
-          )}
+
 
           {/* ── CART SHEET ───────────────────────────────────────────────── */}
           {showCart && (
