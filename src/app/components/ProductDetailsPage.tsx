@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Plus, Minus, X, Check, ShoppingCart, Copy, Send, Mail } from "lucide-react";
+import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Plus, Minus, X, Check, Copy, Send, Mail } from "lucide-react";
 
 // --- Types ---
 interface ProductDetailsPageProps {
@@ -20,6 +20,8 @@ interface ProductDetailsPageProps {
     desc?: string;
   };
   onOpenCart?: () => void;
+  onSelectProduct?: (p: any) => void;
+  allProducts?: any[];
 }
 
 const OKRA_IMAGES = [
@@ -40,6 +42,8 @@ export default function ProductDetailsPage({
   setWish,
   product,
   onOpenCart,
+  onSelectProduct,
+  allProducts = [],
 }: ProductDetailsPageProps) {
   // State for gallery
   const [activeImageIdx, setActiveImageIdx] = useState(0);
@@ -70,6 +74,8 @@ export default function ProductDetailsPage({
   const [showShareSheet, setShowShareSheet] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
+  const mainScrollRef = useRef<HTMLDivElement>(null);
+
   // Keep state in sync when product changes
   useEffect(() => {
     setSelectedPack("500g");
@@ -78,6 +84,9 @@ export default function ProductDetailsPage({
     setScrollTop(0);
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = 0;
+    }
+    if (mainScrollRef.current) {
+      mainScrollRef.current.scrollTop = 0;
     }
   }, [product.id, wish]);
 
@@ -196,6 +205,16 @@ export default function ProductDetailsPage({
     setTimeout(() => setShowSuccessToast(false), 2000);
   };
 
+  const handleBuyNow = () => {
+    if (cartQty === 0) {
+      setCart(prev => ({
+        ...prev,
+        [currentProduct.id]: 1,
+      }));
+    }
+    onOpenCart?.();
+  };
+
   const handleIncrement = () => {
     setCart(prev => ({
       ...prev,
@@ -245,7 +264,7 @@ export default function ProductDetailsPage({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F7F7F7] relative select-none">
+    <div className="flex flex-col h-full bg-white relative select-none">
       {/* Dynamic Fixed Header */}
       <div
         className={`absolute top-0 left-0 right-0 z-30 transition-all duration-300 flex items-center justify-between px-4 pb-3 pt-6 ${
@@ -308,7 +327,7 @@ export default function ProductDetailsPage({
       </div>
 
       {/* Scrollable container for main details */}
-      <div onScroll={handleMainScroll} className="flex-1 overflow-y-auto hide-sb pb-[88px]">
+      <div ref={mainScrollRef} onScroll={handleMainScroll} className="flex-1 overflow-y-auto hide-sb pb-[88px]">
         {/* 1. Top Product Image Area */}
         <div className="w-full relative bg-white aspect-square overflow-hidden">
           {/* Scrollable Gallery */}
@@ -588,70 +607,192 @@ export default function ProductDetailsPage({
             )}
           </div>
 
+          {/* Similar Products Section */}
+          {(() => {
+            const query = product.name.toLowerCase();
+            const isVegOrFruit = query.includes("fingers") || query.includes("veggie") || query.includes("fresh") || product.id.includes("ladies-fingers");
+            const isRiceOrAtta = query.includes("rice") || query.includes("atta") || query.includes("wheat") || query.includes("matta");
+            const isBeverage = query.includes("coffee") || query.includes("tea") || query.includes("bru");
+            const isDairyOrEggs = query.includes("milk") || query.includes("egg");
+            
+            const candidates = (allProducts || []).filter((p: any) => {
+              if (p.id === product.id) return false;
+              if (p.id.includes("ladies-fingers") && product.id.includes("ladies-fingers")) return false;
+              return true;
+            });
 
+            const scored = candidates.map((p: any) => {
+              let score = 0;
+              const name = p.name.toLowerCase();
+              if (isVegOrFruit && (name.includes("veggie") || name.includes("fingers") || name.includes("fresh") || p.id.includes("ladies-fingers"))) score += 10;
+              if (isRiceOrAtta && (name.includes("rice") || name.includes("atta") || name.includes("wheat") || name.includes("matta"))) score += 10;
+              if (isBeverage && (name.includes("coffee") || name.includes("tea") || name.includes("bru"))) score += 10;
+              if (isDairyOrEggs && (name.includes("milk") || name.includes("egg"))) score += 10;
+              
+              const queryWords = query.split(/\s+/);
+              queryWords.forEach(word => {
+                if (word.length > 2 && name.includes(word)) score += 5;
+              });
+              return { product: p, score };
+            });
 
+            const similarList = scored
+              .sort((a, b) => b.score - a.score)
+              .map(item => item.product)
+              .slice(0, 5);
+
+            if (similarList.length === 0) return null;
+
+            return (
+              <div className="px-5 py-5 border-t border-slate-100/80">
+                <h3 className="text-slate-800 text-[15px] font-bold tracking-tight mb-4 text-left">
+                  Similar Products
+                </h3>
+                
+                <div className="flex gap-4 overflow-x-auto pb-2 hide-sb scroll-smooth">
+                  {similarList.map((p) => {
+                    const qty = cart[p.id] || 0;
+                    const isOkraImg = p.id.includes("ladies-fingers");
+                    const displayImg = isOkraImg ? OKRA_IMAGES[0] : p.img;
+                    
+                    return (
+                      <div
+                        key={p.id}
+                        className="flex-shrink-0 cursor-pointer active:scale-[0.97] transition-all duration-200 ease-out flex flex-col select-none text-left"
+                        style={{ width: 114 }}
+                        onClick={() => onSelectProduct?.(p)}
+                      >
+                        {/* Image Box */}
+                        <div className="relative" style={{ height: 104 }}>
+                          <div className="w-full h-full rounded-2xl bg-white border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-hidden flex items-center justify-center p-1.5">
+                            <img
+                              src={displayImg}
+                              alt={p.name}
+                              className="w-full h-full object-contain transform scale-110 transition-transform duration-200"
+                            />
+                          </div>
+                          
+                          {/* Plus Button */}
+                          <button
+                            className="absolute -bottom-2 -right-1 z-10 w-8 h-8 bg-white border-2 flex items-center justify-center shadow-md active:scale-90 transition-all duration-200 cursor-pointer"
+                            style={{ borderColor: TEAL, borderRadius: 9 }}
+                            onClick={e => {
+                              e.stopPropagation();
+                              setCart(prev => ({
+                                ...prev,
+                                [p.id]: (prev[p.id] || 0) + 1,
+                              }));
+                            }}
+                          >
+                            <Plus style={{ width: 18, height: 18, color: TEAL, strokeWidth: 3 }} />
+                            {qty > 0 && (
+                              <span
+                                className="absolute -top-1.5 -right-1.5 text-white font-black rounded-full flex items-center justify-center border border-white shadow-xs"
+                                style={{ width: 16, height: 16, fontSize: 9, backgroundColor: TEAL }}
+                              >
+                                {qty}
+                              </span>
+                            )}
+                          </button>
+                        </div>
+                        
+                        {/* Details */}
+                        <div className="pt-2.5 px-0.5 pb-0.5">
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="font-black text-white rounded-md flex items-center justify-center relative"
+                              style={{
+                                fontSize: 12,
+                                backgroundColor: "#1E8E3E",
+                                boxShadow: "0 2.5px 0 #12642B",
+                                padding: "2px 6px",
+                                fontFamily: "'Inter', sans-serif",
+                              }}
+                            >
+                              ₹{p.price}
+                            </span>
+                            {p.originalPrice > p.price && (
+                              <span className="line-through text-slate-400 font-medium" style={{ fontSize: 10.5 }}>
+                                ₹{p.originalPrice}
+                              </span>
+                            )}
+                          </div>
+                          
+                          <p className="line-clamp-2 font-semibold text-slate-900 leading-[1.2] tracking-tight mt-1.5" style={{ fontSize: 11.5 }}>
+                            {p.name}
+                          </p>
+                          
+                          <p className="text-[#5F6368] text-[10px] mt-0.5 font-semibold">
+                            {p.weight}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
       </div>
 
       {/* 6. Fixed Bottom Purchase CTA Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100/50 py-3 px-5 z-20 flex items-center gap-3.5 rounded-t-[28px] shadow-[0_-8px_30px_rgba(0,0,0,0.035)] pb-[calc(12px+env(safe-area-inset-bottom,0px))]">
-        {/* Left Cart Button with Badge */}
-        <button
-          onClick={onOpenCart}
-          className="w-12 h-12 rounded-[14px] border border-slate-200 bg-white flex items-center justify-center relative flex-shrink-0 active:scale-95 transition-all text-slate-800"
-        >
-          <ShoppingCart className="w-5 h-5 stroke-[2]" />
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-[#F03A60] text-white text-[9.5px] font-bold w-5 h-5 rounded-full flex items-center justify-center border border-white">
-              {cartCount}
-            </span>
-          )}
-        </button>
-
-        {/* Right Button (Add or Qty Selector) */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100/50 py-3.5 px-5 z-20 flex items-center gap-3.5 rounded-t-[28px] shadow-[0_-8px_30px_rgba(0,0,0,0.035)] pb-[calc(12px+env(safe-area-inset-bottom,0px))]">
+        {/* Left Button (Add to cart or Qty Selector) */}
         <div className="flex-1 h-12">
           {cartQty === 0 ? (
             <button
               onClick={handleAddToCart}
-              style={{ backgroundColor: TEAL }}
-              className="w-full h-full text-white font-extrabold text-sm rounded-[14px] active:scale-[0.98] active:bg-[#014f57] transition-all flex items-center justify-center shadow-md shadow-teal-900/10 cursor-pointer"
+              className="w-full h-full border-2 bg-white text-sm rounded-[14px] active:scale-[0.98] transition-all flex items-center justify-center font-extrabold cursor-pointer hover:bg-slate-50/40"
+              style={{ borderColor: TEAL, color: TEAL }}
             >
-              Add to Cart
+              Add to cart
             </button>
           ) : (
             <div
-              style={{ backgroundColor: TEAL }}
-              className="w-full h-full text-white font-extrabold text-sm rounded-[14px] flex items-center justify-between px-4 shadow-md shadow-teal-900/10"
+              className="w-full h-full border-2 bg-white text-sm rounded-[14px] flex items-center justify-between px-3"
+              style={{ borderColor: TEAL, color: TEAL }}
             >
               {/* Decrement */}
               <button
                 onClick={handleDecrement}
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
+                className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center active:scale-90 hover:bg-slate-200 transition-all cursor-pointer"
+                style={{ color: TEAL }}
               >
                 <Minus className="w-3.5 h-3.5 stroke-[3]" />
               </button>
 
-              {/* Qty and price details */}
-              <div className="flex flex-col items-center">
-                <span className="text-[13px] tracking-tight font-extrabold">
-                  {cartQty} in Cart
-                </span>
-                <span className="text-[9px] text-white/80 font-semibold mt-0.5">
-                  Total: ₹{(cartQty * currentProduct.price).toFixed(selectedPack === "250g" ? 2 : 0)}
-                </span>
-              </div>
+              {/* Qty */}
+              <span className="text-[13px] tracking-tight font-extrabold">
+                {cartQty} in Cart
+              </span>
 
               {/* Increment */}
               <button
                 onClick={handleIncrement}
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
+                className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center active:scale-90 hover:bg-slate-200 transition-all cursor-pointer"
+                style={{ color: TEAL }}
               >
                 <Plus className="w-3.5 h-3.5 stroke-[3]" />
               </button>
             </div>
           )}
         </div>
+
+        {/* Right Button (Buy Now) */}
+        <button
+          onClick={handleBuyNow}
+          style={{ backgroundColor: TEAL }}
+          className="flex-1 h-12 text-white rounded-[14px] active:scale-[0.98] active:bg-[#014f57] transition-all flex flex-col items-center justify-center shadow-md shadow-teal-900/10 cursor-pointer"
+        >
+          <span className="text-[13px] tracking-tight font-extrabold leading-tight">
+            Buy now
+          </span>
+          <span className="text-[10px] text-white/80 font-semibold mt-0.5">
+            at ₹{currentProduct.price.toFixed(selectedPack === "250g" || currentProduct.price % 1 !== 0 ? 2 : 0)}
+          </span>
+        </button>
       </div>
 
       {/* Fullscreen Image Viewer Modal */}
