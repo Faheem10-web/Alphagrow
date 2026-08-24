@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Truck, Plus, Minus, X, Check } from "lucide-react";
+import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Truck, Plus, Minus, X, Check, ShoppingCart } from "lucide-react";
 
 // --- Types ---
 interface ProductDetailsPageProps {
@@ -19,6 +19,7 @@ interface ProductDetailsPageProps {
     img: string;
     desc?: string;
   };
+  onOpenCart?: () => void;
 }
 
 const OKRA_IMAGES = [
@@ -38,6 +39,7 @@ export default function ProductDetailsPage({
   wish,
   setWish,
   product,
+  onOpenCart,
 }: ProductDetailsPageProps) {
   // State for gallery
   const [activeImageIdx, setActiveImageIdx] = useState(0);
@@ -178,6 +180,7 @@ export default function ProductDetailsPage({
 
   const currentProduct = packDetails[selectedPack];
   const cartQty = cart[currentProduct.id] || 0;
+  const cartCount = Object.values(cart).reduce((s, v) => s + v, 0);
 
   // Cart operations
   const handleAddToCart = () => {
@@ -581,49 +584,63 @@ export default function ProductDetailsPage({
       </div>
 
       {/* 6. Fixed Bottom Purchase CTA Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-3.5 px-4 z-20 flex flex-col gap-2 pb-[calc(14px+env(safe-area-inset-bottom,0px))]">
-        {cartQty === 0 ? (
-          /* Simple Add Button */
-          <button
-            onClick={handleAddToCart}
-            style={{ backgroundColor: TEAL }}
-            className="w-full text-white font-extrabold text-sm py-3.5 rounded-2xl active:scale-[0.98] active:bg-[#014f57] transition-all flex items-center justify-center shadow-md shadow-teal-900/10 cursor-pointer"
-          >
-            Add
-          </button>
-        ) : (
-          /* Quantity Selector Button Grid */
-          <div
-            style={{ backgroundColor: TEAL }}
-            className="w-full text-white font-extrabold text-sm py-3.5 rounded-2xl flex items-center justify-between px-6 shadow-md shadow-teal-900/10"
-          >
-            {/* Decrement */}
-            <button
-              onClick={handleDecrement}
-              className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
-            >
-              <Minus className="w-4 h-4 stroke-[3]" />
-            </button>
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-3.5 px-4 z-20 flex items-center gap-3 pb-[calc(14px+env(safe-area-inset-bottom,0px))]">
+        {/* Left Cart Button with Badge */}
+        <button
+          onClick={onOpenCart}
+          className="w-14 h-14 rounded-[18px] border border-slate-200 bg-white flex items-center justify-center relative flex-shrink-0 active:scale-95 transition-all text-slate-800"
+        >
+          <ShoppingCart className="w-6 h-6 stroke-[2]" />
+          {cartCount > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 bg-[#F03A60] text-white text-[11px] font-bold w-5.5 h-5.5 rounded-full flex items-center justify-center border border-white">
+              {cartCount}
+            </span>
+          )}
+        </button>
 
-            {/* Qty and price details */}
-            <div className="flex flex-col items-center">
-              <span className="text-base tracking-tight font-extrabold">
-                {cartQty} in Cart
-              </span>
-              <span className="text-3xs text-white/80 font-semibold mt-0.5">
-                Total: ₹{(cartQty * currentProduct.price).toFixed(selectedPack === "250g" ? 2 : 0)}
-              </span>
+        {/* Right Button (Add or Qty Selector) */}
+        <div className="flex-1 h-14">
+          {cartQty === 0 ? (
+            <button
+              onClick={handleAddToCart}
+              style={{ backgroundColor: TEAL }}
+              className="w-full h-full text-white font-extrabold text-[15px] rounded-[18px] active:scale-[0.98] active:bg-[#014f57] transition-all flex items-center justify-center shadow-md shadow-teal-900/10 cursor-pointer"
+            >
+              Add to Cart
+            </button>
+          ) : (
+            <div
+              style={{ backgroundColor: TEAL }}
+              className="w-full h-full text-white font-extrabold text-sm rounded-[18px] flex items-center justify-between px-6 shadow-md shadow-teal-900/10"
+            >
+              {/* Decrement */}
+              <button
+                onClick={handleDecrement}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
+              >
+                <Minus className="w-4 h-4 stroke-[3]" />
+              </button>
+
+              {/* Qty and price details */}
+              <div className="flex flex-col items-center">
+                <span className="text-sm tracking-tight font-extrabold">
+                  {cartQty} in Cart
+                </span>
+                <span className="text-3xs text-white/80 font-semibold mt-0.5">
+                  Total: ₹{(cartQty * currentProduct.price).toFixed(selectedPack === "250g" ? 2 : 0)}
+                </span>
+              </div>
+
+              {/* Increment */}
+              <button
+                onClick={handleIncrement}
+                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
+              >
+                <Plus className="w-4 h-4 stroke-[3]" />
+              </button>
             </div>
-
-            {/* Increment */}
-            <button
-              onClick={handleIncrement}
-              className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
-            >
-              <Plus className="w-4 h-4 stroke-[3]" />
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Fullscreen Image Viewer Modal */}

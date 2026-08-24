@@ -863,6 +863,7 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               wish={wish}
               setWish={setWish}
               product={selectedProduct}
+              onOpenCart={() => setShowCart(true)}
             />
           ) : (
             <>
