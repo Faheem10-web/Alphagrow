@@ -49,7 +49,7 @@ import ProductDetailsPage from "./components/ProductDetailsPage";
 
 type Badge = "NEW" | "OFFER" | "BEST SELLER";
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   weight: string;
@@ -164,7 +164,7 @@ const PRODUCTS_DEALS: Product[] = [
   { id: "d5", name: "Premium Sunflower Oil",weight: "1 L",  price: 119, originalPrice: 180, discount: 34, badge: "OFFER", desc: "100% Pure & Refined | Cold Pressed", img: imgOil },
 ];
 
-const ALL_PRODUCTS = [
+export const ALL_PRODUCTS = [
   ...PRODUCTS_NEW,
   ...PRODUCTS_BEST,
   ...PRODUCTS_DEALS,
@@ -584,7 +584,7 @@ function ProductSheet({
 }
 
 // Helper to resolve product details including dynamic alt sizes (ending with -alt)
-const resolveProduct = (id: string): Product | undefined => {
+export const resolveProduct = (id: string): Product | undefined => {
   // 1. Try exact match
   const p = ALL_PRODUCTS.find(p => p.id === id);
   if (p) return p;
@@ -760,12 +760,45 @@ export default function App() {
 
   const cartCount = Object.values(cart).reduce((s, v) => s + v, 0);
 
-  const addToCart = (id: string) => setCart(c => ({ ...c, [id]: (c[id] || 0) + 1 }));
+  const addToCart = (id: string) => setCart(c => {
+    const p = resolveProduct(id);
+    if (!p) return c;
+    
+    // Find if there is already a matching product (same name and weight) in the cart
+    const existingEntry = Object.entries(c).find(([cartId]) => {
+      const cartP = resolveProduct(cartId);
+      return cartP && cartP.name.toLowerCase() === p.name.toLowerCase() && cartP.weight.toLowerCase() === p.weight.toLowerCase();
+    });
+    
+    if (existingEntry) {
+      const [existingId, qty] = existingEntry;
+      return { ...c, [existingId]: qty + 1 };
+    } else {
+      return { ...c, [id]: 1 };
+    }
+  });
+
   const subFromCart = (id: string) => setCart(c => {
-    const n = { ...c };
-    if ((n[id] || 0) > 1) n[id]--;
-    else delete n[id];
-    return n;
+    const p = resolveProduct(id);
+    if (!p) return c;
+    
+    // Find if there is already a matching product (same name and weight) in the cart
+    const existingEntry = Object.entries(c).find(([cartId]) => {
+      const cartP = resolveProduct(cartId);
+      return cartP && cartP.name.toLowerCase() === p.name.toLowerCase() && cartP.weight.toLowerCase() === p.weight.toLowerCase();
+    });
+    
+    if (existingEntry) {
+      const [existingId, qty] = existingEntry;
+      const n = { ...c };
+      if (qty > 1) {
+        n[existingId] = qty - 1;
+      } else {
+        delete n[existingId];
+      }
+      return n;
+    }
+    return c;
   });
   const toggleWish = (id: string) => setWish(w => {
     const n = new Set(w);
@@ -902,8 +935,8 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
             />
           ) : (
             <>
-              {/* ── UNIFIED HEADER & COMPACT SCROLL NAVIGATION AREA (Home page only) ───────────── */}
-              {activeNav === "home" && (
+              {/* ── UNIFIED HEADER & COMPACT SCROLL NAVIGATION AREA (Home page and Offers page) ───────────── */}
+              {(activeNav === "home" || activeNav === "offers") && (
             <div
               className="flex-shrink-0 relative transition-all duration-300 ease-in-out z-30"
               onWheel={(e) => {

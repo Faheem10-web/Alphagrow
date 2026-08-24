@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Plus, Minus, X, Check, Copy, Send, Mail } from "lucide-react";
+import { resolveProduct } from "../App";
 
 // --- Types ---
 interface ProductDetailsPageProps {
@@ -192,45 +193,89 @@ export default function ProductDetailsPage({
   };
 
   const currentProduct = packDetails[selectedPack];
-  const cartQty = cart[currentProduct.id] || 0;
+  
+  // Find cart quantity by matching product name and weight
+  const cartQty = (() => {
+    const existingEntry = Object.entries(cart).find(([cartId]) => {
+      const cartP = resolveProduct(cartId);
+      return cartP && cartP.name.toLowerCase() === currentProduct.name.toLowerCase() && cartP.weight.toLowerCase() === currentProduct.size.toLowerCase();
+    });
+    return existingEntry ? existingEntry[1] : 0;
+  })();
+
   const cartCount = Object.values(cart).reduce((s, v) => s + v, 0);
 
   // Cart operations
   const handleAddToCart = () => {
-    setCart(prev => ({
-      ...prev,
-      [currentProduct.id]: (prev[currentProduct.id] || 0) + 1,
-    }));
+    setCart(prev => {
+      const existingEntry = Object.entries(prev).find(([cartId]) => {
+        const cartP = resolveProduct(cartId);
+        return cartP && cartP.name.toLowerCase() === currentProduct.name.toLowerCase() && cartP.weight.toLowerCase() === currentProduct.size.toLowerCase();
+      });
+      
+      if (existingEntry) {
+        const [existingId, qty] = existingEntry;
+        return { ...prev, [existingId]: qty + 1 };
+      } else {
+        return { ...prev, [currentProduct.id]: 1 };
+      }
+    });
     setShowSuccessToast(true);
     setTimeout(() => setShowSuccessToast(false), 2000);
   };
 
   const handleBuyNow = () => {
     if (cartQty === 0) {
-      setCart(prev => ({
-        ...prev,
-        [currentProduct.id]: 1,
-      }));
+      setCart(prev => {
+        const existingEntry = Object.entries(prev).find(([cartId]) => {
+          const cartP = resolveProduct(cartId);
+          return cartP && cartP.name.toLowerCase() === currentProduct.name.toLowerCase() && cartP.weight.toLowerCase() === currentProduct.size.toLowerCase();
+        });
+        
+        if (existingEntry) {
+          return prev;
+        } else {
+          return { ...prev, [currentProduct.id]: 1 };
+        }
+      });
     }
     onOpenCart?.();
   };
 
   const handleIncrement = () => {
-    setCart(prev => ({
-      ...prev,
-      [currentProduct.id]: (prev[currentProduct.id] || 0) + 1,
-    }));
+    setCart(prev => {
+      const existingEntry = Object.entries(prev).find(([cartId]) => {
+        const cartP = resolveProduct(cartId);
+        return cartP && cartP.name.toLowerCase() === currentProduct.name.toLowerCase() && cartP.weight.toLowerCase() === currentProduct.size.toLowerCase();
+      });
+      
+      if (existingEntry) {
+        const [existingId, qty] = existingEntry;
+        return { ...prev, [existingId]: qty + 1 };
+      } else {
+        return { ...prev, [currentProduct.id]: 1 };
+      }
+    });
   };
 
   const handleDecrement = () => {
     setCart(prev => {
-      const next = { ...prev };
-      if ((next[currentProduct.id] || 0) > 1) {
-        next[currentProduct.id]--;
-      } else {
-        delete next[currentProduct.id];
+      const existingEntry = Object.entries(prev).find(([cartId]) => {
+        const cartP = resolveProduct(cartId);
+        return cartP && cartP.name.toLowerCase() === currentProduct.name.toLowerCase() && cartP.weight.toLowerCase() === currentProduct.size.toLowerCase();
+      });
+      
+      if (existingEntry) {
+        const [existingId, qty] = existingEntry;
+        const next = { ...prev };
+        if (qty > 1) {
+          next[existingId] = qty - 1;
+        } else {
+          delete next[existingId];
+        }
+        return next;
       }
-      return next;
+      return prev;
     });
   };
 
@@ -651,7 +696,13 @@ export default function ProductDetailsPage({
                 
                 <div className="flex gap-4 overflow-x-auto pb-2 hide-sb scroll-smooth">
                   {similarList.map((p) => {
-                    const qty = cart[p.id] || 0;
+                    const qty = (() => {
+                      const existingEntry = Object.entries(cart).find(([cartId]) => {
+                        const cartP = resolveProduct(cartId);
+                        return cartP && cartP.name.toLowerCase() === p.name.toLowerCase() && cartP.weight.toLowerCase() === p.weight.toLowerCase();
+                      });
+                      return existingEntry ? existingEntry[1] : 0;
+                    })();
                     const isOkraImg = p.id.includes("ladies-fingers");
                     const displayImg = isOkraImg ? OKRA_IMAGES[0] : p.img;
                     
@@ -678,10 +729,18 @@ export default function ProductDetailsPage({
                             style={{ borderColor: TEAL, borderRadius: 9 }}
                             onClick={e => {
                               e.stopPropagation();
-                              setCart(prev => ({
-                                ...prev,
-                                [p.id]: (prev[p.id] || 0) + 1,
-                              }));
+                              setCart(prev => {
+                                const existingEntry = Object.entries(prev).find(([cartId]) => {
+                                  const cartP = resolveProduct(cartId);
+                                  return cartP && cartP.name.toLowerCase() === p.name.toLowerCase() && cartP.weight.toLowerCase() === p.weight.toLowerCase();
+                                });
+                                if (existingEntry) {
+                                  const [existingId, itemQty] = existingEntry;
+                                  return { ...prev, [existingId]: itemQty + 1 };
+                                } else {
+                                  return { ...prev, [p.id]: 1 };
+                                }
+                              });
                             }}
                           >
                             <Plus style={{ width: 18, height: 18, color: TEAL, strokeWidth: 3 }} />
