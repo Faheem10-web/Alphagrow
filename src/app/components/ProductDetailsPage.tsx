@@ -337,7 +337,7 @@ export default function ProductDetailsPage({
           </div>
 
           {/* Pagination dots overlay */}
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+          <div className="absolute bottom-9 left-0 right-0 flex justify-center gap-2 z-10">
             {galleryImages.map((_, idx) => (
               <button
                 key={idx}
@@ -355,265 +355,271 @@ export default function ProductDetailsPage({
           </div>
         </div>
 
-        {/* 2. Product Summary Card */}
-        <div className="mx-4 mt-4 bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.015)] border border-slate-100">
-          <div className="flex items-start justify-between">
-            <div>
-              {/* Product Title */}
-              <h1 className="text-[#202124] font-semibold text-[22px] tracking-tight leading-tight">
-                {product.name}
-              </h1>
-            </div>
-
-            {/* Favorite toggle */}
-            <button
-              onClick={toggleFavorite}
-              className="w-10 h-10 rounded-full bg-[#F1F3F4] flex items-center justify-center active:scale-90 transition-all text-[#5F6368]"
-            >
-              <Heart
-                className={`w-4.5 h-4.5 transition-colors ${
-                  isFavorited ? "fill-red-500 stroke-red-500" : "stroke-[#5F6368]"
-                }`}
-              />
-            </button>
-          </div>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 mt-2">
-            <span className="inline-flex items-center bg-[#FEF7E0] text-[#B06000] text-[11px] font-bold px-2 py-0.5 rounded-[6px]">
-              4.8 ★
-            </span>
-            <span className="text-[#5F6368] text-xs font-semibold">(126 reviews)</span>
-          </div>
-
-          {/* Price details */}
-          <div className="flex items-baseline mt-4 pt-1">
-            <span className="text-[#202124] font-semibold text-[28px] tracking-tight leading-none">
-              ₹{currentProduct.price.toFixed(selectedPack === "250g" || currentProduct.price % 1 !== 0 ? 2 : 0)}
-            </span>
-            <span className="text-[#5F6368] line-through text-base ml-2.5 font-normal">
-              ₹{currentProduct.originalPrice.toFixed(2)}
-            </span>
-            <span className="inline-block bg-[#E6F4EA] text-[#137333] text-xs font-bold px-2.5 py-1 rounded-[6px] ml-2.5">
-              {currentProduct.discount}
-            </span>
-          </div>
-        </div>
-
-        {/* 3. Pack Size Selector */}
-        <div className="mx-4 mt-3 bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.015)] border border-slate-100">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-slate-800 text-[15px] font-normal tracking-tight">
-              Pack sizes: <span className="font-semibold text-slate-800">{currentProduct.size}</span>
-            </h3>
-            <ChevronRight className="w-5 h-5 text-slate-400" />
-          </div>
-
-          {/* Pack Options Grid */}
-          <div className="grid grid-cols-2 gap-3.5">
-            {/* Option 1 */}
-            <button
-              onClick={() => setSelectedPack("500g")}
-              className={`rounded-[18px] border-2 p-3 flex flex-col items-center justify-center text-center transition-all ${
-                selectedPack === "500g"
-                  ? "border-[#1E8E3E] bg-white"
-                  : "border-slate-200 bg-white"
-              }`}
-            >
-              <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1.5 w-full block text-center mb-2">
-                {packDetails["500g"].size}
-              </div>
-              <div className="flex items-baseline justify-center gap-1 w-full">
-                <span className="font-semibold text-sm text-[#202124]">
-                  ₹{packDetails["500g"].price.toFixed(packDetails["500g"].price % 1 !== 0 ? 2 : 0)}
-                </span>
-                <span className="text-[10px] text-[#5F6368] font-normal">({packDetails["500g"].unitPrice})</span>
-              </div>
-              <div className="flex items-center justify-center gap-1 mt-1 w-full text-[10px]">
-                <span className="text-[#5F6368] line-through">₹{packDetails["500g"].originalPrice.toFixed(2)}</span>
-                <span className="text-[#137333] font-bold">{packDetails["500g"].discount}</span>
-              </div>
-            </button>
-
-            {/* Option 2 */}
-            <button
-              onClick={() => setSelectedPack("250g")}
-              className={`rounded-[18px] border-2 p-3 flex flex-col items-center justify-center text-center transition-all ${
-                selectedPack === "250g"
-                  ? "border-[#1E8E3E] bg-white"
-                  : "border-slate-200 bg-white"
-              }`}
-            >
-              <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1.5 w-full block text-center mb-2">
-                {packDetails["250g"].size}
-              </div>
-              <div className="flex items-baseline justify-center gap-1 w-full">
-                <span className="font-semibold text-sm text-[#202124]">
-                  ₹{packDetails["250g"].price.toFixed(packDetails["250g"].price % 1 !== 0 ? 2 : 0)}
-                </span>
-                <span className="text-[10px] text-[#5F6368] font-normal">({packDetails["250g"].unitPrice})</span>
-              </div>
-              <div className="flex items-center justify-center gap-1 mt-1 w-full text-[10px]">
-                <span className="text-[#5F6368] line-through">₹{packDetails["250g"].originalPrice.toFixed(2)}</span>
-                <span className="text-[#137333] font-bold">{packDetails["250g"].discount}</span>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* 4. Product Details Accordion Container */}
-        <div className="mx-4 mt-3 bg-white rounded-3xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.02)] border border-slate-100/50">
+        {/* Unified Product Details Container (Full width, rounded top) */}
+        <div className="bg-white rounded-t-[32px] -mt-6 relative z-10 pt-6 pb-20 border-t border-slate-100/50 shadow-[0_-8px_30px_rgba(0,0,0,0.025)]">
           
-          {/* Header overall accordion toggle */}
-          <button
-            onClick={() => setShowAccordionGroup(!showAccordionGroup)}
-            className="w-full flex items-center justify-center py-4 border-b border-slate-100 text-slate-700 font-semibold text-sm gap-1 active:bg-slate-50/50 transition-colors"
-          >
-            <span>{showAccordionGroup ? "Hide product details" : "Show product details"}</span>
-            {showAccordionGroup ? (
-              <ChevronUp className="w-4 h-4 text-slate-500 stroke-[2]" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-slate-500 stroke-[2]" />
-            )}
-          </button>
-
-          {/* Accordion Content Block */}
-          {showAccordionGroup && (
-            <div className="divide-y divide-slate-100">
-              
-              {/* About the Product */}
-              <div className="p-4">
-                <button
-                  onClick={() => toggleAccordionItem("about")}
-                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
-                >
-                  <span>About the Product</span>
-                  {expandedItems.about ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </button>
-                {expandedItems.about && (
-                  <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal antialiased">
-                    {aboutText}
-                  </p>
-                )}
+          {/* 2. Product Summary Area */}
+          <div className="px-5 pb-5 border-b border-slate-100/80">
+            <div className="flex items-start justify-between">
+              <div>
+                {/* Product Title */}
+                <h1 className="text-[#202124] font-semibold text-[22px] tracking-tight leading-tight">
+                  {product.name}
+                </h1>
               </div>
 
-              {/* Sourcing */}
-              <div className="p-4">
-                <button
-                  onClick={() => toggleAccordionItem("sourcing")}
-                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
-                >
-                  <span>Sourcing</span>
-                  {expandedItems.sourcing ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </button>
-                {expandedItems.sourcing && (
-                  <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal">
-                    {isOkra ? "Directly sourced from certified local organic farms around Kerala. Harvested daily in the early morning hours and brought immediately to our temperature-controlled centers to ensure farm-fresh quality."
-                      : `Sourced from select quality farms and certified producers. Quality checked and sealed at origin to ensure premium packaging and long shelf life.`}
-                  </p>
-                )}
-              </div>
-
-              {/* Storage */}
-              <div className="p-4">
-                <button
-                  onClick={() => toggleAccordionItem("storage")}
-                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
-                >
-                  <span>Storage</span>
-                  {expandedItems.storage ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </button>
-                {expandedItems.storage && (
-                  <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal">
-                    {isOkra ? "To keep ladies' fingers fresh, do not wash them until you are ready to cook. Store them in a dry, ventilated paper bag inside the crisper drawer of your refrigerator. Best consumed within 3-4 days of purchase."
-                      : `Store in a cool, dry place away from direct sunlight. Once opened, transfer the contents to an airtight container to preserve freshness and prevent moisture.`}
-                  </p>
-                )}
-              </div>
-
-              {/* Other Product Info */}
-              <div className="p-4">
-                <button
-                  onClick={() => toggleAccordionItem("info")}
-                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
-                >
-                  <span>Other Product Info</span>
-                  {expandedItems.info ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </button>
-                {expandedItems.info && (
-                  <div className="mt-2 text-slate-600 text-xs space-y-1 font-normal">
-                    <div><strong>Net Quantity:</strong> {currentProduct.size}</div>
-                    <div><strong>Category:</strong> {isOkra ? "Fresh Produce / Vegetables" : "Groceries / Food Items"}</div>
-                    <div><strong>FSSAI License No:</strong> 12345678901234</div>
-                    <div><strong>Packer Address:</strong> AlphaGro Solutions, Chelambra, Kozhikode, KL - 673634</div>
-                  </div>
-                )}
-              </div>
-
-              {/* Variable Weight */}
-              <div className="p-4">
-                <button
-                  onClick={() => toggleAccordionItem("weight")}
-                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
-                >
-                  <span>Variable Weight</span>
-                  {expandedItems.weight ? (
-                    <ChevronUp className="w-4 h-4 text-slate-500" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-slate-500" />
-                  )}
-                </button>
-                {expandedItems.weight && (
-                  <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal">
-                    Weights can vary slightly between packaging and delivery. The final invoice amount will reflect the exact item weight determined at dispatch. If the weight is lower than ordered, the difference is credited back immediately.
-                  </p>
-                )}
-              </div>
-
+              {/* Favorite toggle */}
+              <button
+                onClick={toggleFavorite}
+                className="w-10 h-10 rounded-full bg-[#F1F3F4] flex items-center justify-center active:scale-90 transition-all text-[#5F6368]"
+              >
+                <Heart
+                  className={`w-4.5 h-4.5 transition-colors ${
+                    isFavorited ? "fill-red-500 stroke-red-500" : "stroke-[#5F6368]"
+                  }`}
+                />
+              </button>
             </div>
-          )}
+
+            {/* Rating */}
+            <div className="flex items-center gap-1.5 mt-2">
+              <span className="inline-flex items-center bg-[#FEF7E0] text-[#B06000] text-[11px] font-bold px-2 py-0.5 rounded-[6px]">
+                4.8 ★
+              </span>
+              <span className="text-[#5F6368] text-xs font-semibold">(126 reviews)</span>
+            </div>
+
+            {/* Price details */}
+            <div className="flex items-baseline mt-4 pt-1">
+              <span className="text-[#202124] font-semibold text-[28px] tracking-tight leading-none">
+                ₹{currentProduct.price.toFixed(selectedPack === "250g" || currentProduct.price % 1 !== 0 ? 2 : 0)}
+              </span>
+              <span className="text-[#5F6368] line-through text-base ml-2.5 font-normal">
+                ₹{currentProduct.originalPrice.toFixed(2)}
+              </span>
+              <span className="inline-block bg-[#E6F4EA] text-[#137333] text-xs font-bold px-2.5 py-1 rounded-[6px] ml-2.5">
+                {currentProduct.discount}
+              </span>
+            </div>
+          </div>
+
+          {/* 3. Pack Size Selector */}
+          <div className="px-5 py-5 border-b border-slate-100/80">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-slate-800 text-[15px] font-normal tracking-tight">
+                Pack sizes: <span className="font-semibold text-slate-800">{currentProduct.size}</span>
+              </h3>
+              <ChevronRight className="w-5 h-5 text-slate-400" />
+            </div>
+
+            {/* Pack Options Grid */}
+            <div className="grid grid-cols-2 gap-3.5">
+              {/* Option 1 */}
+              <button
+                onClick={() => setSelectedPack("500g")}
+                className={`rounded-[18px] border-2 p-3 flex flex-col items-center justify-center text-center transition-all ${
+                  selectedPack === "500g"
+                    ? "border-[#1E8E3E] bg-white"
+                    : "border-slate-200 bg-white"
+                }`}
+              >
+                <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1.5 w-full block text-center mb-2">
+                  {packDetails["500g"].size}
+                </div>
+                <div className="flex items-baseline justify-center gap-1 w-full">
+                  <span className="font-semibold text-sm text-[#202124]">
+                    ₹{packDetails["500g"].price.toFixed(packDetails["500g"].price % 1 !== 0 ? 2 : 0)}
+                  </span>
+                  <span className="text-[10px] text-[#5F6368] font-normal">({packDetails["500g"].unitPrice})</span>
+                </div>
+                <div className="flex items-center justify-center gap-1 mt-1 w-full text-[10px]">
+                  <span className="text-[#5F6368] line-through">₹{packDetails["500g"].originalPrice.toFixed(2)}</span>
+                  <span className="text-[#137333] font-bold">{packDetails["500g"].discount}</span>
+                </div>
+              </button>
+
+              {/* Option 2 */}
+              <button
+                onClick={() => setSelectedPack("250g")}
+                className={`rounded-[18px] border-2 p-3 flex flex-col items-center justify-center text-center transition-all ${
+                  selectedPack === "250g"
+                    ? "border-[#1E8E3E] bg-white"
+                    : "border-slate-200 bg-white"
+                }`}
+              >
+                <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1.5 w-full block text-center mb-2">
+                  {packDetails["250g"].size}
+                </div>
+                <div className="flex items-baseline justify-center gap-1 w-full">
+                  <span className="font-semibold text-sm text-[#202124]">
+                    ₹{packDetails["250g"].price.toFixed(packDetails["250g"].price % 1 !== 0 ? 2 : 0)}
+                  </span>
+                  <span className="text-[10px] text-[#5F6368] font-normal">({packDetails["250g"].unitPrice})</span>
+                </div>
+                <div className="flex items-center justify-center gap-1 mt-1 w-full text-[10px]">
+                  <span className="text-[#5F6368] line-through">₹{packDetails["250g"].originalPrice.toFixed(2)}</span>
+                  <span className="text-[#137333] font-bold">{packDetails["250g"].discount}</span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* 4. Product Details Accordion Container */}
+          <div className="px-5 py-5 border-b border-slate-100/80">
+            {/* Header overall accordion toggle */}
+            <button
+              onClick={() => setShowAccordionGroup(!showAccordionGroup)}
+              className="w-full flex items-center justify-center py-2 text-slate-700 font-semibold text-sm gap-1 active:bg-slate-50/50 transition-colors"
+            >
+              <span>{showAccordionGroup ? "Hide product details" : "Show product details"}</span>
+              {showAccordionGroup ? (
+                <ChevronUp className="w-4 h-4 text-slate-500 stroke-[2]" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-slate-500 stroke-[2]" />
+              )}
+            </button>
+
+            {/* Accordion Content Block */}
+            {showAccordionGroup && (
+              <div className="divide-y divide-slate-100 mt-2">
+                
+                {/* About the Product */}
+                <div className="py-4">
+                  <button
+                    onClick={() => toggleAccordionItem("about")}
+                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
+                  >
+                    <span>About the Product</span>
+                    {expandedItems.about ? (
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    )}
+                  </button>
+                  {expandedItems.about && (
+                    <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal antialiased">
+                      {aboutText}
+                    </p>
+                  )}
+                </div>
+
+                {/* Sourcing */}
+                <div className="py-4">
+                  <button
+                    onClick={() => toggleAccordionItem("sourcing")}
+                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
+                  >
+                    <span>Sourcing</span>
+                    {expandedItems.sourcing ? (
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    )}
+                  </button>
+                  {expandedItems.sourcing && (
+                    <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal">
+                      {isOkra ? "Directly sourced from certified local organic farms around Kerala. Harvested daily in the early morning hours and brought immediately to our temperature-controlled centers to ensure farm-fresh quality."
+                        : `Sourced from select quality farms and certified producers. Quality checked and sealed at origin to ensure premium packaging and long shelf life.`}
+                    </p>
+                  )}
+                </div>
+
+                {/* Storage */}
+                <div className="py-4">
+                  <button
+                    onClick={() => toggleAccordionItem("storage")}
+                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
+                  >
+                    <span>Storage</span>
+                    {expandedItems.storage ? (
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    )}
+                  </button>
+                  {expandedItems.storage && (
+                    <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal">
+                      {isOkra ? "To keep ladies' fingers fresh, do not wash them until you are ready to cook. Store them in a dry, ventilated paper bag inside the crisper drawer of your refrigerator. Best consumed within 3-4 days of purchase."
+                        : `Store in a cool, dry place away from direct sunlight. Once opened, transfer the contents to an airtight container to preserve freshness and prevent moisture.`}
+                    </p>
+                  )}
+                </div>
+
+                {/* Other Product Info */}
+                <div className="py-4">
+                  <button
+                    onClick={() => toggleAccordionItem("info")}
+                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
+                  >
+                    <span>Other Product Info</span>
+                    {expandedItems.info ? (
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    )}
+                  </button>
+                  {expandedItems.info && (
+                    <div className="mt-2 text-slate-600 text-xs space-y-1 font-normal">
+                      <div><strong>Net Quantity:</strong> {currentProduct.size}</div>
+                      <div><strong>Category:</strong> {isOkra ? "Fresh Produce / Vegetables" : "Groceries / Food Items"}</div>
+                      <div><strong>FSSAI License No:</strong> 12345678901234</div>
+                      <div><strong>Packer Address:</strong> AlphaGro Solutions, Chelambra, Kozhikode, KL - 673634</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Variable Weight */}
+                <div className="py-4">
+                  <button
+                    onClick={() => toggleAccordionItem("weight")}
+                    className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
+                  >
+                    <span>Variable Weight</span>
+                    {expandedItems.weight ? (
+                      <ChevronUp className="w-4 h-4 text-slate-500" />
+                    ) : (
+                      <ChevronDown className="w-4 h-4 text-slate-500" />
+                    )}
+                  </button>
+                  {expandedItems.weight && (
+                    <p className="mt-2 text-slate-600 text-xs leading-relaxed font-normal">
+                      Weights can vary slightly between packaging and delivery. The final invoice amount will reflect the exact item weight determined at dispatch. If the weight is lower than ordered, the difference is credited back immediately.
+                    </p>
+                  )}
+                </div>
+
+              </div>
+            )}
+          </div>
+
+          {/* 5. Delivery Card Area */}
+          <div className="px-5 py-5">
+            <button
+              onClick={() => setShowLocationModal(true)}
+              className="w-full flex items-center gap-3.5 bg-[#EFF2F3] hover:bg-[#E7EAEB] rounded-[20px] p-4 border border-[#E0E4E6]/50 transition-colors text-left"
+            >
+              {/* Circular green icon */}
+              <div className="w-[42px] h-[42px] rounded-full bg-[#004D40] flex items-center justify-center flex-shrink-0">
+                <Truck className="w-5 h-5 text-[#8AD8B1] stroke-[2.5]" />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h4 className="text-[#002D30] font-normal text-[14px] tracking-tight">
+                  Delivery Today, 4:00 PM - 6:00 PM
+                </h4>
+                <p className="text-[#5F6368] text-[11px] font-normal mt-0.5 flex items-center">
+                  Delivering to&nbsp;<span className="text-[#202124] font-normal flex items-center">{deliveryLocation}<ChevronDown className="w-3 h-3 ml-0.5 stroke-[3] text-[#5F6368]" /></span>
+                </p>
+              </div>
+            </button>
+          </div>
+
         </div>
-
-        {/* 5. Delivery Card */}
-        <button
-          onClick={() => setShowLocationModal(true)}
-          className="mx-4 mt-3 w-[calc(100%-2rem)] flex items-center gap-3.5 bg-[#EFF2F3] hover:bg-[#E7EAEB] rounded-[24px] p-4 border border-[#E0E4E6]/50 transition-colors text-left"
-        >
-          {/* Circular green icon */}
-          <div className="w-[42px] h-[42px] rounded-full bg-[#004D40] flex items-center justify-center flex-shrink-0">
-            <Truck className="w-5 h-5 text-[#8AD8B1] stroke-[2.5]" />
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <h4 className="text-[#002D30] font-normal text-[14px] tracking-tight">
-              Delivery Today, 4:00 PM - 6:00 PM
-            </h4>
-            <p className="text-[#5F6368] text-[11px] font-normal mt-0.5 flex items-center">
-              Delivering to&nbsp;<span className="text-[#202124] font-normal flex items-center">{deliveryLocation}<ChevronDown className="w-3 h-3 ml-0.5 stroke-[3] text-[#5F6368]" /></span>
-            </p>
-          </div>
-        </button>
 
       </div>
 
       {/* 6. Fixed Bottom Purchase CTA Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-2.5 px-4 z-20 flex items-center gap-3 pb-[calc(10px+env(safe-area-inset-bottom,0px))]">
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100/50 py-3 px-5 z-20 flex items-center gap-3.5 rounded-t-[28px] shadow-[0_-8px_30px_rgba(0,0,0,0.035)] pb-[calc(12px+env(safe-area-inset-bottom,0px))]">
         {/* Left Cart Button with Badge */}
         <button
           onClick={onOpenCart}
