@@ -45,6 +45,11 @@ export default function ProductDetailsPage({
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const handleMainScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setScrollTop(e.currentTarget.scrollTop);
+  };
 
   // State for product specs
   const [selectedPack, setSelectedPack] = useState<"500g" | "250g">("500g");
@@ -72,6 +77,7 @@ export default function ProductDetailsPage({
     setSelectedPack("500g");
     setIsFavorited(wish.has(product.id));
     setActiveImageIdx(0);
+    setScrollTop(0);
     if (scrollRef.current) {
       scrollRef.current.scrollLeft = 0;
     }
@@ -251,8 +257,69 @@ export default function ProductDetailsPage({
 
   return (
     <div className="flex flex-col h-full bg-[#F7F7F7] relative select-none">
+      {/* Dynamic Fixed Header */}
+      <div
+        className={`absolute top-0 left-0 right-0 z-30 transition-all duration-300 flex items-center justify-between px-4 pb-3 pt-6 ${
+          scrollTop > 60
+            ? "bg-white border-b border-slate-100 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
+            : "bg-transparent"
+        }`}
+      >
+        {/* Back Button */}
+        <button
+          onClick={onBack}
+          className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-100/50 shadow-sm active:scale-95 transition-all text-slate-800"
+        >
+          <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+        </button>
+
+        {/* Scrolled Content Preview */}
+        <div
+          className={`flex-1 flex items-center gap-2.5 mx-3 min-w-0 transition-all duration-300 ${
+            scrollTop > 60 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
+          }`}
+        >
+          <img
+            src={product.img}
+            alt={product.name}
+            className="w-9 h-9 object-cover rounded-lg bg-slate-50 border border-slate-100 flex-shrink-0"
+          />
+          <div className="flex flex-col min-w-0 text-left">
+            <span className="text-[13px] font-semibold text-slate-800 truncate leading-tight">
+              {product.name}
+            </span>
+            <div className="flex items-baseline gap-1.5 mt-0.5">
+              <span className="text-xs font-bold text-slate-900">
+                ₹{currentProduct.price.toFixed(selectedPack === "250g" || currentProduct.price % 1 !== 0 ? 2 : 0)}
+              </span>
+              {currentProduct.originalPrice > currentProduct.price && (
+                <span className="text-[10px] text-slate-400 line-through">
+                  ₹{currentProduct.originalPrice.toFixed(0)}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onBack}
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-100/50 shadow-sm active:scale-95 transition-all text-slate-800"
+          >
+            <Search className="w-5 h-5 stroke-[2.5]" />
+          </button>
+          <button
+            onClick={handleShare}
+            className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-100/50 shadow-sm active:scale-95 transition-all text-slate-800"
+          >
+            <Share className="w-5 h-5 stroke-[2.5]" />
+          </button>
+        </div>
+      </div>
+
       {/* Scrollable container for main details */}
-      <div className="flex-1 overflow-y-auto hide-sb pb-24">
+      <div onScroll={handleMainScroll} className="flex-1 overflow-y-auto hide-sb pb-24">
         {/* 1. Top Product Image Area */}
         <div className="w-full relative bg-white aspect-square overflow-hidden">
           {/* Scrollable Gallery */}
@@ -274,33 +341,6 @@ export default function ProductDetailsPage({
                 />
               </div>
             ))}
-          </div>
-
-          {/* Navigation Overlay Buttons */}
-          <div className="absolute top-6 left-4 right-4 flex items-center justify-between z-10">
-            {/* Back Button */}
-            <button
-              onClick={onBack}
-              className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md active:scale-95 transition-all text-slate-800"
-            >
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-
-            {/* Search and Share */}
-            <div className="flex items-center gap-2.5">
-              <button
-                onClick={onBack} // Back to home and search
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md active:scale-95 transition-all text-slate-800"
-              >
-                <Search className="w-5 h-5 stroke-[2.5]" />
-              </button>
-              <button
-                onClick={handleShare}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-md active:scale-95 transition-all text-slate-800"
-              >
-                <Share className="w-5 h-5 stroke-[2.5]" />
-              </button>
-            </div>
           </div>
 
           {/* Pagination dots overlay */}
