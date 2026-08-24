@@ -270,7 +270,7 @@ export default function ProductDetailsPage({
           onClick={onBack}
           className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-100/50 shadow-sm active:scale-95 transition-all text-slate-800"
         >
-          <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+          <ArrowLeft className="w-4.5 h-4.5 stroke-[2.5]" />
         </button>
 
         {/* Scrolled Content Preview */}
@@ -307,13 +307,13 @@ export default function ProductDetailsPage({
             onClick={onBack}
             className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-100/50 shadow-sm active:scale-95 transition-all text-slate-800"
           >
-            <Search className="w-5 h-5 stroke-[2.5]" />
+            <Search className="w-4.5 h-4.5 stroke-[2.5]" />
           </button>
           <button
             onClick={handleShare}
             className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-slate-100/50 shadow-sm active:scale-95 transition-all text-slate-800"
           >
-            <Share className="w-5 h-5 stroke-[2.5]" />
+            <Share className="w-4.5 h-4.5 stroke-[2.5]" />
           </button>
         </div>
       </div>
@@ -382,7 +382,7 @@ export default function ProductDetailsPage({
               className="w-10 h-10 rounded-full bg-[#F1F3F4] flex items-center justify-center active:scale-90 transition-all text-[#5F6368]"
             >
               <Heart
-                className={`w-5 h-5 transition-colors ${
+                className={`w-4.5 h-4.5 transition-colors ${
                   isFavorited ? "fill-red-500 stroke-red-500" : "stroke-[#5F6368]"
                 }`}
               />
