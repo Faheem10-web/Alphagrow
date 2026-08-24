@@ -324,11 +324,11 @@ export default function ProductDetailsPage({
           <div className="flex items-start justify-between">
             <div>
               {/* Brand Label */}
-              <span className="inline-flex items-center text-[#1E8E3E] font-bold text-xs tracking-wider uppercase mb-0.5">
-                {brandName} <ChevronRight className="w-3 h-3 ml-0.5 stroke-[3] text-[#1E8E3E]" />
+              <span className="inline-flex items-center text-[#1E8E3E] font-medium text-[13px] lowercase mb-1">
+                {brandName} <ChevronRight className="w-3.5 h-3.5 ml-0.5 stroke-[2.5]" />
               </span>
               {/* Product Title */}
-              <h1 className="text-[#202124] font-extrabold text-[22px] tracking-tight leading-tight mt-0.5">
+              <h1 className="text-[#202124] font-medium text-[22px] tracking-tight leading-tight mt-0.5">
                 {product.name}
               </h1>
             </div>
@@ -356,7 +356,7 @@ export default function ProductDetailsPage({
 
           {/* Price details */}
           <div className="flex items-baseline mt-4 pt-1">
-            <span className="text-[#202124] font-black text-[28px] tracking-tight leading-none">
+            <span className="text-[#202124] font-medium text-[28px] tracking-tight leading-none">
               ₹{currentProduct.price.toFixed(selectedPack === "250g" || currentProduct.price % 1 !== 0 ? 2 : 0)}
             </span>
             <span className="text-[#5F6368] line-through text-base ml-2.5 font-normal">
