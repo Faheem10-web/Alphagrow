@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Truck, Plus, Minus, X, Check, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Truck, Plus, Minus, X, Check, ShoppingCart, Copy, Send, Mail } from "lucide-react";
 
 // --- Types ---
 interface ProductDetailsPageProps {
@@ -71,6 +71,8 @@ export default function ProductDetailsPage({
 
   // Success toast state
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showShareSheet, setShowShareSheet] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
 
   // Keep state in sync when product changes
   useEffect(() => {
@@ -218,23 +220,14 @@ export default function ProductDetailsPage({
   };
 
   // Share action
-  const handleShare = async () => {
-    const shareData = {
-      title: `${product.name} on AlphaGro`,
-      text: `Check out fresh ${product.name} on AlphaGro Grocery App!`,
-      url: window.location.href,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.log("Error sharing:", err);
-      }
-    } else {
-      // Fallback
-      navigator.clipboard.writeText(window.location.href);
-      alert("Product URL copied to clipboard!");
-    }
+  const handleShare = () => {
+    setShowShareSheet(true);
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   // Scroll gallery logic to update dots
@@ -750,6 +743,138 @@ export default function ProductDetailsPage({
                   {deliveryLocation === loc && <Check className="w-4 h-4 text-teal-800 stroke-[3.5]" />}
                 </button>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Share Drawer Modal */}
+      {showShareSheet && (
+        <div
+          className="absolute inset-0 bg-black/40 z-50 flex items-end justify-center"
+          onClick={() => setShowShareSheet(false)}
+        >
+          <div
+            className="w-full bg-white rounded-t-3xl p-5 pb-8 max-w-[420px]"
+            onClick={e => e.stopPropagation()}
+            style={{ animation: "slideUp 250ms cubic-bezier(.4,0,.2,1)" }}
+          >
+            <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4" />
+            
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-gray-900 font-bold text-base">Share Product</h3>
+              <button
+                onClick={() => setShowShareSheet(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Product Preview Info */}
+            <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100 mb-5">
+              <img
+                src={product.img}
+                alt={product.name}
+                className="w-12 h-12 object-cover rounded-xl border border-slate-200/60 bg-white"
+              />
+              <div className="flex-1 min-w-0 text-left">
+                <h4 className="text-[13px] font-bold text-slate-800 truncate">{product.name}</h4>
+                <p className="text-xs text-slate-500 font-semibold mt-0.5">{currentProduct.size} • ₹{currentProduct.price}</p>
+              </div>
+            </div>
+
+            {/* Social Share Grid */}
+            <div className="grid grid-cols-4 gap-4 mb-6">
+              {/* WhatsApp */}
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`Check out fresh ${product.name} on AlphaGro: ${window.location.href}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
+              >
+                <div className="w-11 h-11 rounded-full bg-[#E8F5E9] text-[#2E7D32] flex items-center justify-center border border-[#C8E6C9]/40">
+                  <Send className="w-5 h-5 -rotate-45 translate-x-0.5 -translate-y-0.5" />
+                </div>
+                <span className="text-[10px] text-slate-600 font-semibold">WhatsApp</span>
+              </a>
+
+              {/* Telegram */}
+              <a
+                href={`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(`Check out fresh ${product.name} on AlphaGro!`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
+              >
+                <div className="w-11 h-11 rounded-full bg-[#E1F5FE] text-[#0288D1] flex items-center justify-center border border-[#B3E5FC]/40">
+                  <Send className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] text-slate-600 font-semibold">Telegram</span>
+              </a>
+
+              {/* Email */}
+              <a
+                href={`mailto:?subject=${encodeURIComponent(`Fresh ${product.name} on AlphaGro`)}&body=${encodeURIComponent(`Check it out: ${window.location.href}`)}`}
+                className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
+              >
+                <div className="w-11 h-11 rounded-full bg-[#FFEBEE] text-[#C62828] flex items-center justify-center border border-[#FFCDD2]/40">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] text-slate-600 font-semibold">Email</span>
+              </a>
+
+              {/* System Share */}
+              <button
+                onClick={async () => {
+                  if (navigator.share) {
+                    try {
+                      await navigator.share({
+                        title: product.name,
+                        text: `Check out fresh ${product.name} on AlphaGro!`,
+                        url: window.location.href,
+                      });
+                      setShowShareSheet(false);
+                    } catch (e) {
+                      console.log(e);
+                    }
+                  } else {
+                    handleCopyLink();
+                  }
+                }}
+                className="flex flex-col items-center gap-1.5 active:scale-95 transition-transform"
+              >
+                <div className="w-11 h-11 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200/40">
+                  <Share className="w-4.5 h-4.5" />
+                </div>
+                <span className="text-[10px] text-slate-600 font-semibold">System</span>
+              </button>
+            </div>
+
+            {/* Copier link block */}
+            <div className="flex items-center gap-2 bg-slate-100 p-2 pl-3 rounded-2xl border border-slate-200/40">
+              <span className="text-xs text-slate-500 font-bold truncate flex-1 text-left">
+                {window.location.origin}/?p={product.id}
+              </span>
+              <button
+                onClick={handleCopyLink}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1 ${
+                  isCopied
+                    ? "bg-[#E6F4EA] text-[#137333]"
+                    : "bg-[#02616A] text-white hover:bg-[#014f57]"
+                }`}
+              >
+                {isCopied ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <span>Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>Copy</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
