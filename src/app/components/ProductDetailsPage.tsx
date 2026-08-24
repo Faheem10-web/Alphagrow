@@ -584,49 +584,49 @@ export default function ProductDetailsPage({
       </div>
 
       {/* 6. Fixed Bottom Purchase CTA Bar */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-3.5 px-4 z-20 flex items-center gap-3 pb-[calc(14px+env(safe-area-inset-bottom,0px))]">
+      <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-slate-100 py-2.5 px-4 z-20 flex items-center gap-3 pb-[calc(10px+env(safe-area-inset-bottom,0px))]">
         {/* Left Cart Button with Badge */}
         <button
           onClick={onOpenCart}
-          className="w-14 h-14 rounded-[18px] border border-slate-200 bg-white flex items-center justify-center relative flex-shrink-0 active:scale-95 transition-all text-slate-800"
+          className="w-12 h-12 rounded-[14px] border border-slate-200 bg-white flex items-center justify-center relative flex-shrink-0 active:scale-95 transition-all text-slate-800"
         >
-          <ShoppingCart className="w-6 h-6 stroke-[2]" />
+          <ShoppingCart className="w-5 h-5 stroke-[2]" />
           {cartCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-[#F03A60] text-white text-[11px] font-bold w-5.5 h-5.5 rounded-full flex items-center justify-center border border-white">
+            <span className="absolute -top-1 -right-1 bg-[#F03A60] text-white text-[9.5px] font-bold w-5 h-5 rounded-full flex items-center justify-center border border-white">
               {cartCount}
             </span>
           )}
         </button>
 
         {/* Right Button (Add or Qty Selector) */}
-        <div className="flex-1 h-14">
+        <div className="flex-1 h-12">
           {cartQty === 0 ? (
             <button
               onClick={handleAddToCart}
               style={{ backgroundColor: TEAL }}
-              className="w-full h-full text-white font-extrabold text-[15px] rounded-[18px] active:scale-[0.98] active:bg-[#014f57] transition-all flex items-center justify-center shadow-md shadow-teal-900/10 cursor-pointer"
+              className="w-full h-full text-white font-extrabold text-sm rounded-[14px] active:scale-[0.98] active:bg-[#014f57] transition-all flex items-center justify-center shadow-md shadow-teal-900/10 cursor-pointer"
             >
               Add to Cart
             </button>
           ) : (
             <div
               style={{ backgroundColor: TEAL }}
-              className="w-full h-full text-white font-extrabold text-sm rounded-[18px] flex items-center justify-between px-6 shadow-md shadow-teal-900/10"
+              className="w-full h-full text-white font-extrabold text-sm rounded-[14px] flex items-center justify-between px-4 shadow-md shadow-teal-900/10"
             >
               {/* Decrement */}
               <button
                 onClick={handleDecrement}
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
               >
-                <Minus className="w-4 h-4 stroke-[3]" />
+                <Minus className="w-3.5 h-3.5 stroke-[3]" />
               </button>
 
               {/* Qty and price details */}
               <div className="flex flex-col items-center">
-                <span className="text-sm tracking-tight font-extrabold">
+                <span className="text-[13px] tracking-tight font-extrabold">
                   {cartQty} in Cart
                 </span>
-                <span className="text-3xs text-white/80 font-semibold mt-0.5">
+                <span className="text-[9px] text-white/80 font-semibold mt-0.5">
                   Total: ₹{(cartQty * currentProduct.price).toFixed(selectedPack === "250g" ? 2 : 0)}
                 </span>
               </div>
@@ -634,9 +634,9 @@ export default function ProductDetailsPage({
               {/* Increment */}
               <button
                 onClick={handleIncrement}
-                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
+                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center active:scale-90 hover:bg-white/20 transition-all text-white"
               >
-                <Plus className="w-4 h-4 stroke-[3]" />
+                <Plus className="w-3.5 h-3.5 stroke-[3]" />
               </button>
             </div>
           )}
