@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import {
   ShoppingCart, User, MapPin, ChevronDown, Search, Mic, Camera,
   Heart, Plus, Minus, Home, LayoutGrid, Award, Tag, BookOpen,
-  X, Star, ShoppingBag,
+  X, Star, ShoppingBag, Smartphone, Monitor
 } from "lucide-react";
 import banner1 from "../assets/b-1.png";
 import bsmall from "../assets/b-small.png";
@@ -728,6 +728,7 @@ export default function App() {
   const [wish, setWish]                 = useState<Set<string>>(new Set());
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [activePage, setActivePage]     = useState<"dashboard" | "product-details">("dashboard");
+  const [enableFrame, setEnableFrame]   = useState(true);
 
   const handleOpenProduct = (p: Product) => {
     setSelectedProduct(p);
@@ -819,6 +820,28 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
     { id: "flyers",     label: "Flyers",     Icon: CustomFlyersIcon },
   ];
 
+  const frameStyle: React.CSSProperties = enableFrame ? {
+    maxWidth: 420,
+    width: "100%",
+    height: "min(840px, 92dvh)",
+    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+    backgroundColor: "#f7f7f7",
+    borderRadius: 36,
+    border: "10px solid #1a1a1a",
+    boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.08)",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  } : {
+    maxWidth: "100%",
+    width: "100%",
+    height: "100vh",
+    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+    backgroundColor: "#f7f7f7",
+    borderRadius: 0,
+    border: "none",
+    boxShadow: "none",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  };
+
   return (
     <>
       <style>{`
@@ -842,18 +865,28 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
         }
       `}</style>
 
-      <div className="min-h-screen flex items-center justify-center main-container" style={{ backgroundColor: "#3e2d24" }}>
+      <div className="min-h-screen flex items-center justify-center main-container relative" style={{ backgroundColor: "#3e2d24", transition: "background-color 0.3s" }}>
+        {/* Frame Toggle Button (Desktop top-right) */}
+        <button
+          onClick={() => setEnableFrame(prev => !prev)}
+          className="mobile-hide fixed top-6 right-6 z-50 flex items-center gap-2 bg-white/95 border border-slate-200/80 shadow-[0_4px_12px_rgba(0,0,0,0.08)] px-4 py-2.5 rounded-2xl cursor-pointer hover:bg-white active:scale-95 transition-all select-none text-slate-800 text-[13px] font-bold"
+        >
+          {enableFrame ? (
+            <>
+              <Monitor className="w-4.5 h-4.5 text-[#02616A] stroke-[2.5]" />
+              <span>Full Screen Mode</span>
+            </>
+          ) : (
+            <>
+              <Smartphone className="w-4.5 h-4.5 text-slate-600 stroke-[2.5]" />
+              <span>Mobile Mockup Mode</span>
+            </>
+          )}
+        </button>
+
         <div
           className="w-full flex flex-col relative overflow-hidden phone-frame"
-          style={{
-            maxWidth: 420,
-            height: "min(840px, 92dvh)",
-            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-            backgroundColor: "#f7f7f7",
-            borderRadius: 36,
-            border: "10px solid #1a1a1a",
-            boxShadow: "0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.08)",
-          }}
+          style={frameStyle}
         >
           {activePage === "product-details" && selectedProduct ? (
             <ProductDetailsPage
