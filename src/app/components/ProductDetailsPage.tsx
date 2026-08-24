@@ -359,12 +359,8 @@ export default function ProductDetailsPage({
         <div className="mx-4 mt-4 bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.015)] border border-slate-100">
           <div className="flex items-start justify-between">
             <div>
-              {/* Brand Label */}
-              <span className="inline-flex items-center text-[#1E8E3E] font-medium text-[13px] lowercase mb-1">
-                {brandName} <ChevronRight className="w-3.5 h-3.5 ml-0.5 stroke-[2.5]" />
-              </span>
               {/* Product Title */}
-              <h1 className="text-[#202124] font-semibold text-[22px] tracking-tight leading-tight mt-0.5">
+              <h1 className="text-[#202124] font-semibold text-[22px] tracking-tight leading-tight">
                 {product.name}
               </h1>
             </div>
