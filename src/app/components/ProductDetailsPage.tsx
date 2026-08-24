@@ -314,8 +314,8 @@ export default function ProductDetailsPage({
                     scrollRef.current.scrollTo({ left: idx * width, behavior: "smooth" });
                   }
                 }}
-                className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                  idx === activeImageIdx ? "bg-slate-800" : "bg-white/80 shadow-[0_0.5px_1px_rgba(0,0,0,0.15)]"
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  idx === activeImageIdx ? "w-6 bg-[#02616A]" : "w-2 bg-[#CFD8DC]"
                 }`}
               />
             ))}
