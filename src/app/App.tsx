@@ -44,6 +44,7 @@ import popCatBaby from "../assets/pop_cat_baby.png";
 import popCatMasala from "../assets/pop_cat_masala.png";
 import CategoriesPage from "./components/CategoriesPage";
 import ProductDetailsPage from "./components/ProductDetailsPage";
+import OffersPage from "./components/OffersPage";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -169,7 +170,20 @@ export const ALL_PRODUCTS = [
   ...PRODUCTS_BEST,
   ...PRODUCTS_DEALS,
   { id: "ladies-fingers-500g", name: "Ladies' Fingers", weight: "500 g", price: 30, originalPrice: 48.75, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" },
-  { id: "ladies-fingers-250g", name: "Ladies' Fingers", weight: "250 g", price: 15.5, originalPrice: 25, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" }
+  { id: "ladies-fingers-250g", name: "Ladies' Fingers", weight: "250 g", price: 15.5, originalPrice: 25, discount: 38, badge: "BEST", desc: "Fresh green okra / bhindi, locally sourced, tender and rich in fiber.", img: "https://images.unsplash.com/photo-1449339090384-d2cbf643f5f2?w=600&auto=format&fit=crop" },
+  
+  // New Offers Page Products
+  { id: "deal-grain-rice", name: "Premium Basmati Rice Saver Pack", weight: "5 kg", price: 389, originalPrice: 550, discount: 29, badge: "OFFER" as Badge, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&auto=format&fit=crop&q=80", desc: "Premium long-grain aged Basmati Rice, ideal for biryani and daily rice dishes." },
+  { id: "deal-fresh-fiesta", name: "Fresh Fiesta Veggie Box", weight: "1.5 kg", price: 149, originalPrice: 250, discount: 40, badge: "OFFER" as Badge, img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&auto=format&fit=crop&q=80", desc: "Fresh organic mixed vegetables: tomatoes, cucumbers, carrots, and bell peppers." },
+  { id: "deal-dairy-delights", name: "Dairy Delights Combo Pack", weight: "1 pack", price: 299, originalPrice: 399, discount: 25, badge: "OFFER" as Badge, img: "https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=400&auto=format&fit=crop&q=80", desc: "A bundle of gourmet dairy goodness including cheddar cheese, table butter, and rich curd." },
+  { id: "monsoon-umbrella", name: "Windproof Compact Umbrella", weight: "1 unit", price: 249, originalPrice: 399, discount: 37, badge: "NEW" as Badge, img: "https://images.unsplash.com/photo-1527788263495-315bd4d44158?w=300", desc: "Sturdy travel umbrella, water-resistant, auto open-close mechanism." },
+  { id: "furniture-bed", name: "Bed", weight: "1 Unit", price: 7338, originalPrice: 9999, discount: 26, badge: "OFFER" as Badge, img: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400&auto=format&fit=crop&q=80", desc: "Sturdy wooden platform bed frame, modern minimalist design." },
+  { id: "furniture-trolley", name: "Kitchen trolley", weight: "1 Unit", price: 403, originalPrice: 699, discount: 42, badge: "OFFER" as Badge, img: "https://images.unsplash.com/photo-1591081658714-f576fb7ea3ed?w=400&auto=format&fit=crop&q=80", desc: "3-tier mobile cart on wheels, perfect for kitchen, bathroom, or storage organize." },
+  { id: "furniture-wardrobe", name: "Wardrobe", weight: "1 Unit", price: 3960, originalPrice: 5999, discount: 34, badge: "OFFER" as Badge, img: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&auto=format&fit=crop&q=80", desc: "Multilayer fabric-and-metal wardrobe closet with zipper cover for clothes storage." },
+  { id: "spice-combo", name: "Premium Masala Combo Pack", weight: "3 x 100g", price: 189, originalPrice: 250, discount: 24, badge: "BEST" as Badge, img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=500&auto=format&fit=crop&q=80", desc: "Special combo of Eastern Sambhar, MDH Garam Masala, and Aachi Chicken Masala." },
+  { id: "play-yoga-mat", name: "Eco-Friendly Yoga Mat", weight: "6mm Thick", price: 599, originalPrice: 999, discount: 40, badge: "NEW" as Badge, img: "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&auto=format&fit=crop&q=80", desc: "High-density foam, non-slip textured yoga mat with carrying strap." },
+  { id: "play-dumbbells", name: "Fitness Dumbbell Set", weight: "5kg x 2", price: 1299, originalPrice: 1999, discount: 35, badge: "NEW" as Badge, img: "https://images.unsplash.com/photo-1638536532686-d610adfc8e5c?w=400&auto=format&fit=crop&q=80", desc: "Hexagonal iron dumbbells with protective neoprene coating." },
+  { id: "play-toy-train", name: "Kids Zone Toy Train", weight: "1 Box", price: 499, originalPrice: 799, discount: 37, badge: "NEW" as Badge, img: "https://images.unsplash.com/photo-1515488042361-404e9250afef?w=400&auto=format&fit=crop&q=80", desc: "Classic wooden toy train set with magnetic connector blocks." }
 ];
 
 const PROMO_CARDS_6 = [
@@ -1096,65 +1110,67 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
               </div>
 
               {/* Category Navigation Bar (Compact height & 16px icon size on scroll) */}
-              <div
-                className="transition-all duration-300 ease-in-out"
-                style={{
-                  paddingTop: isScrolled ? 2 : 6,
-                  paddingBottom: isScrolled ? 4 : 10,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                }}
-              >
-                <div className="flex overflow-x-auto hide-sb items-center" style={{ gap: isScrolled ? 10 : 8 }}>
-                  {QUICK_CATS.map(cat => {
-                    const active = activeCat === cat.id;
-                    const itemColor = isScrolled
-                      ? (active ? TEAL : "#475569")
-                      : (active ? "#FFFFFF" : "rgba(255, 255, 255, 0.85)");
+              {activeNav === "home" && (
+                <div
+                  className="transition-all duration-300 ease-in-out"
+                  style={{
+                    paddingTop: isScrolled ? 2 : 6,
+                    paddingBottom: isScrolled ? 4 : 10,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                  }}
+                >
+                  <div className="flex overflow-x-auto hide-sb items-center" style={{ gap: isScrolled ? 10 : 8 }}>
+                    {QUICK_CATS.map(cat => {
+                      const active = activeCat === cat.id;
+                      const itemColor = isScrolled
+                        ? (active ? TEAL : "#475569")
+                        : (active ? "#FFFFFF" : "rgba(255, 255, 255, 0.85)");
 
-                    return (
-                      <button
-                        key={cat.id}
-                        className="flex-shrink-0 flex flex-col items-center justify-center relative transition-all duration-300 ease-in-out"
-                        style={{
-                          padding: isScrolled ? "2px 2px" : "4px 2px",
-                          minWidth: 58
-                        }}
-                        onClick={() => setActiveCat(cat.id)}
-                      >
-                        {/* Small Icon sitting directly above text label */}
-                        <div className="flex items-center justify-center mb-0.5 transition-all duration-300">
-                          <QuickIcon id={cat.id} active={active} color={itemColor} size={isScrolled ? 16 : 20} />
-                        </div>
-
-                        {/* Category Label */}
-                        <span
-                          className="transition-all duration-300 whitespace-nowrap"
+                      return (
+                        <button
+                          key={cat.id}
+                          className="flex-shrink-0 flex flex-col items-center justify-center relative transition-all duration-300 ease-in-out"
                           style={{
-                            fontSize: isScrolled ? 11 : 11.5,
-                            fontWeight: active ? (isScrolled ? 700 : 600) : 500,
-                            color: itemColor,
-                            fontFamily: "'Inter', sans-serif"
+                            padding: isScrolled ? "2px 2px" : "4px 2px",
+                            minWidth: 58
                           }}
+                          onClick={() => setActiveCat(cat.id)}
                         >
-                          {cat.label}
-                        </span>
+                          {/* Small Icon sitting directly above text label */}
+                          <div className="flex items-center justify-center mb-0.5 transition-all duration-300">
+                            <QuickIcon id={cat.id} active={active} color={itemColor} size={isScrolled ? 16 : 20} />
+                          </div>
 
-                        {/* Active Underline Pill Bar */}
-                        <span
-                          className="rounded-full transition-all duration-300 mt-1"
-                          style={{
-                            width: active ? "100%" : 0,
-                            height: isScrolled ? 2 : 2.5,
-                            backgroundColor: isScrolled ? TEAL : "#FFFFFF",
-                            opacity: active ? 1 : 0
-                          }}
-                        />
-                      </button>
-                    );
-                  })}
+                          {/* Category Label */}
+                          <span
+                            className="transition-all duration-300 whitespace-nowrap"
+                            style={{
+                              fontSize: isScrolled ? 11 : 11.5,
+                              fontWeight: active ? (isScrolled ? 700 : 600) : 500,
+                              color: itemColor,
+                              fontFamily: "'Inter', sans-serif"
+                            }}
+                          >
+                            {cat.label}
+                          </span>
+
+                          {/* Active Underline Pill Bar */}
+                          <span
+                            className="rounded-full transition-all duration-300 mt-1"
+                            style={{
+                              width: active ? "100%" : 0,
+                              height: isScrolled ? 2 : 2.5,
+                              backgroundColor: isScrolled ? TEAL : "#FFFFFF",
+                              opacity: active ? 1 : 0
+                            }}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
 
@@ -1311,6 +1327,15 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                   ))}
                 </div>
               </div>
+            ) : activeNav === "offers" ? (
+              <OffersPage
+                onOpenProduct={handleOpenProduct}
+                cart={cart}
+                onAdd={addToCart}
+                onSub={subFromCart}
+                wish={wish}
+                onWish={toggleWish}
+              />
             ) : (
               <>
                 {/* FEATURED ONAM BANNER WITH 6 PROMO CARDS (Natural Scroll, NO Shrinking Height Animation) */}
