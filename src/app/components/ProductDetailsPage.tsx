@@ -314,8 +314,8 @@ export default function ProductDetailsPage({
                     scrollRef.current.scrollTo({ left: idx * width, behavior: "smooth" });
                   }
                 }}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  idx === activeImageIdx ? "w-6 bg-[#02616A]" : "w-2 bg-slate-300"
+                className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                  idx === activeImageIdx ? "bg-slate-800" : "bg-white/80 shadow-[0_0.5px_1px_rgba(0,0,0,0.15)]"
                 }`}
               />
             ))}
@@ -331,7 +331,7 @@ export default function ProductDetailsPage({
                 {brandName} <ChevronRight className="w-3.5 h-3.5 ml-0.5 stroke-[2.5]" />
               </span>
               {/* Product Title */}
-              <h1 className="text-[#202124] font-medium text-[22px] tracking-tight leading-tight mt-0.5">
+              <h1 className="text-[#202124] font-semibold text-[22px] tracking-tight leading-tight mt-0.5">
                 {product.name}
               </h1>
             </div>
@@ -359,7 +359,7 @@ export default function ProductDetailsPage({
 
           {/* Price details */}
           <div className="flex items-baseline mt-4 pt-1">
-            <span className="text-[#202124] font-medium text-[28px] tracking-tight leading-none">
+            <span className="text-[#202124] font-semibold text-[28px] tracking-tight leading-none">
               ₹{currentProduct.price.toFixed(selectedPack === "250g" || currentProduct.price % 1 !== 0 ? 2 : 0)}
             </span>
             <span className="text-[#5F6368] line-through text-base ml-2.5 font-normal">
@@ -374,8 +374,8 @@ export default function ProductDetailsPage({
         {/* 3. Pack Size Selector */}
         <div className="mx-4 mt-3 bg-white rounded-[24px] p-5 shadow-[0_2px_12px_rgba(0,0,0,0.015)] border border-slate-100">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[#202124] font-bold text-[15px] tracking-tight">
-              Pack sizes: <span className="font-extrabold text-[#202124]">{currentProduct.size}</span>
+            <h3 className="text-slate-800 text-[15px] font-normal tracking-tight">
+              Pack sizes: <span className="font-semibold text-slate-800">{currentProduct.size}</span>
             </h3>
             <ChevronRight className="w-5 h-5 text-slate-400" />
           </div>
@@ -385,48 +385,48 @@ export default function ProductDetailsPage({
             {/* Option 1 */}
             <button
               onClick={() => setSelectedPack("500g")}
-              className={`rounded-[18px] border-2 p-3.5 flex flex-col items-center justify-center text-center transition-all ${
+              className={`rounded-[18px] border-2 p-3 flex flex-col items-center justify-center text-center transition-all ${
                 selectedPack === "500g"
-                  ? "border-[#1E8E3E] bg-[#E6F4EA]/[0.15]"
+                  ? "border-[#1E8E3E] bg-white"
                   : "border-slate-200 bg-white"
               }`}
             >
-              <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1 w-full block text-center mb-2.5">
+              <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1.5 w-full block text-center mb-2">
                 {packDetails["500g"].size}
               </div>
-              <div className="flex items-baseline justify-center w-full">
-                <span className="font-bold text-sm text-[#202124]">
+              <div className="flex items-baseline justify-center gap-1 w-full">
+                <span className="font-semibold text-sm text-[#202124]">
                   ₹{packDetails["500g"].price.toFixed(packDetails["500g"].price % 1 !== 0 ? 2 : 0)}
                 </span>
-                <span className="text-[11px] text-[#5F6368] font-normal ml-0.5">({packDetails["500g"].unitPrice})</span>
+                <span className="text-[10px] text-[#5F6368] font-normal">({packDetails["500g"].unitPrice})</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 mt-1.5 w-full">
-                <span className="text-[11px] text-[#5F6368] line-through">₹{packDetails["500g"].originalPrice.toFixed(2)}</span>
-                <span className="text-[11px] text-[#137333] font-bold">{packDetails["500g"].discount}</span>
+              <div className="flex items-center justify-center gap-1 mt-1 w-full text-[10px]">
+                <span className="text-[#5F6368] line-through">₹{packDetails["500g"].originalPrice.toFixed(2)}</span>
+                <span className="text-[#137333] font-bold">{packDetails["500g"].discount}</span>
               </div>
             </button>
 
             {/* Option 2 */}
             <button
               onClick={() => setSelectedPack("250g")}
-              className={`rounded-[18px] border-2 p-3.5 flex flex-col items-center justify-center text-center transition-all ${
+              className={`rounded-[18px] border-2 p-3 flex flex-col items-center justify-center text-center transition-all ${
                 selectedPack === "250g"
-                  ? "border-[#1E8E3E] bg-[#E6F4EA]/[0.15]"
+                  ? "border-[#1E8E3E] bg-white"
                   : "border-slate-200 bg-white"
               }`}
             >
-              <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1 w-full block text-center mb-2.5">
+              <div className="bg-[#F1F3F4] text-[#202124] rounded-[10px] text-xs font-bold py-1.5 w-full block text-center mb-2">
                 {packDetails["250g"].size}
               </div>
-              <div className="flex items-baseline justify-center w-full">
-                <span className="font-bold text-sm text-[#202124]">
+              <div className="flex items-baseline justify-center gap-1 w-full">
+                <span className="font-semibold text-sm text-[#202124]">
                   ₹{packDetails["250g"].price.toFixed(packDetails["250g"].price % 1 !== 0 ? 2 : 0)}
                 </span>
-                <span className="text-[11px] text-[#5F6368] font-normal ml-0.5">({packDetails["250g"].unitPrice})</span>
+                <span className="text-[10px] text-[#5F6368] font-normal">({packDetails["250g"].unitPrice})</span>
               </div>
-              <div className="flex items-center justify-center gap-1.5 mt-1.5 w-full">
-                <span className="text-[11px] text-[#5F6368] line-through">₹{packDetails["250g"].originalPrice.toFixed(2)}</span>
-                <span className="text-[11px] text-[#137333] font-bold">{packDetails["250g"].discount}</span>
+              <div className="flex items-center justify-center gap-1 mt-1 w-full text-[10px]">
+                <span className="text-[#5F6368] line-through">₹{packDetails["250g"].originalPrice.toFixed(2)}</span>
+                <span className="text-[#137333] font-bold">{packDetails["250g"].discount}</span>
               </div>
             </button>
           </div>
@@ -438,13 +438,13 @@ export default function ProductDetailsPage({
           {/* Header overall accordion toggle */}
           <button
             onClick={() => setShowAccordionGroup(!showAccordionGroup)}
-            className="w-full flex items-center justify-center py-4 border-b border-slate-100 text-teal-800 font-extrabold text-sm gap-1 active:bg-slate-50/50 transition-colors"
+            className="w-full flex items-center justify-center py-4 border-b border-slate-100 text-slate-700 font-semibold text-sm gap-1 active:bg-slate-50/50 transition-colors"
           >
             <span>{showAccordionGroup ? "Hide product details" : "Show product details"}</span>
             {showAccordionGroup ? (
-              <ChevronUp className="w-4 h-4 stroke-[3]" />
+              <ChevronUp className="w-4 h-4 text-slate-500 stroke-[2]" />
             ) : (
-              <ChevronDown className="w-4 h-4 stroke-[3]" />
+              <ChevronDown className="w-4 h-4 text-slate-500 stroke-[2]" />
             )}
           </button>
 
@@ -456,7 +456,7 @@ export default function ProductDetailsPage({
               <div className="p-4">
                 <button
                   onClick={() => toggleAccordionItem("about")}
-                  className="w-full flex items-center justify-between text-left font-extrabold text-sm text-slate-800"
+                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
                 >
                   <span>About the Product</span>
                   {expandedItems.about ? (
@@ -476,7 +476,7 @@ export default function ProductDetailsPage({
               <div className="p-4">
                 <button
                   onClick={() => toggleAccordionItem("sourcing")}
-                  className="w-full flex items-center justify-between text-left font-extrabold text-sm text-slate-800"
+                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
                 >
                   <span>Sourcing</span>
                   {expandedItems.sourcing ? (
@@ -497,7 +497,7 @@ export default function ProductDetailsPage({
               <div className="p-4">
                 <button
                   onClick={() => toggleAccordionItem("storage")}
-                  className="w-full flex items-center justify-between text-left font-extrabold text-sm text-slate-800"
+                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
                 >
                   <span>Storage</span>
                   {expandedItems.storage ? (
@@ -518,7 +518,7 @@ export default function ProductDetailsPage({
               <div className="p-4">
                 <button
                   onClick={() => toggleAccordionItem("info")}
-                  className="w-full flex items-center justify-between text-left font-extrabold text-sm text-slate-800"
+                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
                 >
                   <span>Other Product Info</span>
                   {expandedItems.info ? (
@@ -541,7 +541,7 @@ export default function ProductDetailsPage({
               <div className="p-4">
                 <button
                   onClick={() => toggleAccordionItem("weight")}
-                  className="w-full flex items-center justify-between text-left font-extrabold text-sm text-slate-800"
+                  className="w-full flex items-center justify-between text-left font-semibold text-sm text-slate-800"
                 >
                   <span>Variable Weight</span>
                   {expandedItems.weight ? (
