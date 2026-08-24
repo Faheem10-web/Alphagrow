@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Truck, Plus, Minus, X, Check, ShoppingCart, Copy, Send, Mail } from "lucide-react";
+import { ArrowLeft, Search, Share, Heart, ChevronRight, ChevronUp, ChevronDown, Plus, Minus, X, Check, ShoppingCart, Copy, Send, Mail } from "lucide-react";
 
 // --- Types ---
 interface ProductDetailsPageProps {
@@ -54,10 +54,6 @@ export default function ProductDetailsPage({
   // State for product specs
   const [selectedPack, setSelectedPack] = useState<"500g" | "250g">("500g");
   const [isFavorited, setIsFavorited] = useState(wish.has(product.id));
-  const [showLocationModal, setShowLocationModal] = useState(false);
-  const [deliveryLocation, setDeliveryLocation] = useState("Kozhikode");
-
-  // Accordion overall toggle
   const [showAccordionGroup, setShowAccordionGroup] = useState(true);
 
   // Individual accordion items states
@@ -312,7 +308,7 @@ export default function ProductDetailsPage({
       </div>
 
       {/* Scrollable container for main details */}
-      <div onScroll={handleMainScroll} className="flex-1 overflow-y-auto hide-sb pb-24">
+      <div onScroll={handleMainScroll} className="flex-1 overflow-y-auto hide-sb pb-[88px]">
         {/* 1. Top Product Image Area */}
         <div className="w-full relative bg-white aspect-square overflow-hidden">
           {/* Scrollable Gallery */}
@@ -356,10 +352,10 @@ export default function ProductDetailsPage({
         </div>
 
         {/* Unified Product Details Container (Full width, rounded top) */}
-        <div className="bg-white rounded-t-[32px] -mt-6 relative z-10 pt-6 pb-20 border-t border-slate-100/50 shadow-[0_-8px_30px_rgba(0,0,0,0.025)]">
+        <div className="bg-white rounded-t-[32px] -mt-6 relative z-10 pt-6 pb-2 border-t border-slate-100/50 shadow-[0_-8px_30px_rgba(0,0,0,0.025)]">
           
           {/* 2. Product Summary Area */}
-          <div className="px-5 pb-5 border-b border-slate-100/80">
+          <div className="px-5 pb-4 border-b border-slate-100/80">
             <div className="flex items-start justify-between">
               <div>
                 {/* Product Title */}
@@ -404,7 +400,7 @@ export default function ProductDetailsPage({
           </div>
 
           {/* 3. Pack Size Selector */}
-          <div className="px-5 py-5 border-b border-slate-100/80">
+          <div className="px-5 py-4 border-b border-slate-100/80">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-slate-800 text-[15px] font-normal tracking-tight">
                 Pack sizes: <span className="font-semibold text-slate-800">{currentProduct.size}</span>
@@ -465,7 +461,7 @@ export default function ProductDetailsPage({
           </div>
 
           {/* 4. Product Details Accordion Container */}
-          <div className="px-5 py-5 border-b border-slate-100/80">
+          <div className="px-5 py-4 border-b border-slate-100/80">
             {/* Header overall accordion toggle */}
             <button
               onClick={() => setShowAccordionGroup(!showAccordionGroup)}
@@ -592,27 +588,7 @@ export default function ProductDetailsPage({
             )}
           </div>
 
-          {/* 5. Delivery Card Area */}
-          <div className="px-5 py-5">
-            <button
-              onClick={() => setShowLocationModal(true)}
-              className="w-full flex items-center gap-3.5 bg-[#EFF2F3] hover:bg-[#E7EAEB] rounded-[20px] p-4 border border-[#E0E4E6]/50 transition-colors text-left"
-            >
-              {/* Circular green icon */}
-              <div className="w-[42px] h-[42px] rounded-full bg-[#004D40] flex items-center justify-center flex-shrink-0">
-                <Truck className="w-5 h-5 text-[#8AD8B1] stroke-[2.5]" />
-              </div>
 
-              <div className="flex-1 min-w-0">
-                <h4 className="text-[#002D30] font-normal text-[14px] tracking-tight">
-                  Delivery Today, 4:00 PM - 6:00 PM
-                </h4>
-                <p className="text-[#5F6368] text-[11px] font-normal mt-0.5 flex items-center">
-                  Delivering to&nbsp;<span className="text-[#202124] font-normal flex items-center">{deliveryLocation}<ChevronDown className="w-3 h-3 ml-0.5 stroke-[3] text-[#5F6368]" /></span>
-                </p>
-              </div>
-            </button>
-          </div>
 
         </div>
 
@@ -704,51 +680,7 @@ export default function ProductDetailsPage({
         </div>
       )}
 
-      {/* Location Picker Modal */}
-      {showLocationModal && (
-        <div
-          className="absolute inset-0 bg-black/40 z-50 flex items-end justify-center"
-          onClick={() => setShowLocationModal(false)}
-        >
-          <div
-            className="w-full bg-white rounded-t-3xl p-5 pb-8 max-w-[420px]"
-            onClick={e => e.stopPropagation()}
-            style={{ animation: "slideUp 250ms cubic-bezier(.4,0,.2,1)" }}
-          >
-            <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-4" />
-            
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-gray-900 font-extrabold text-base">Select Delivery Location</h3>
-              <button
-                onClick={() => setShowLocationModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
 
-            <div className="space-y-2.5">
-              {["Kozhikode", "Ernakulam", "Trivandrum", "Bengaluru", "Chennai"].map(loc => (
-                <button
-                  key={loc}
-                  onClick={() => {
-                    setDeliveryLocation(loc);
-                    setShowLocationModal(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-3.5 rounded-xl border text-sm font-semibold transition-all ${
-                    deliveryLocation === loc
-                      ? "border-[#02616A] bg-[#02616A]/[0.02] text-teal-800"
-                      : "border-slate-100 bg-white text-slate-600 hover:bg-slate-50"
-                  }`}
-                >
-                  <span>{loc}</span>
-                  {deliveryLocation === loc && <Check className="w-4 h-4 text-teal-800 stroke-[3.5]" />}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Share Drawer Modal */}
       {showShareSheet && (
