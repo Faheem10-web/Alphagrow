@@ -400,7 +400,7 @@ interface CardProps {
   isFullCover?: boolean;
 }
 
-function ProductCard({ p, cart, wish, onAdd, onSub, onWish, onOpen, isFullCover }: CardProps) {
+export function ProductCard({ p, cart, wish, onAdd, onSub, onWish, onOpen, isFullCover }: CardProps) {
   const qty = cart[p.id] || 0;
   const liked = wish.has(p.id);
 
@@ -417,7 +417,7 @@ function ProductCard({ p, cart, wish, onAdd, onSub, onWish, onOpen, isFullCover 
       <div className="relative overflow-visible" style={{ height: 104 }}>
         {/* Inner Rounded Image Box */}
         <div
-          className={`w-full h-full rounded-2xl bg-white border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-hidden flex items-center justify-center ${
+          className={`w-full h-full rounded-2xl bg-white border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.03)] overflow-hidden flex items-center justify-center relative ${
             isFullCover ? "p-0" : "p-1.5"
           }`}
         >
@@ -435,8 +435,13 @@ function ProductCard({ p, cart, wish, onAdd, onSub, onWish, onOpen, isFullCover 
             alt={p.name}
             className={
               isFullCover
-                ? "w-full h-full object-cover block"
+                ? "absolute inset-0 block"
                 : "w-full h-full object-contain p-0 transform scale-110 transition-transform duration-200"
+            }
+            style={
+              isFullCover
+                ? { width: "100%", height: "100%", objectFit: "cover" }
+                : undefined
             }
           />
         </div>
@@ -1179,13 +1184,10 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
           ref={scrollContainerRef}
           className="flex-1 overflow-y-auto hide-sb bg-white"
           style={{
-            paddingBottom: showBottomNav ? 68 : 12,
-            transition: "padding-bottom 300ms ease-in-out"
+            paddingBottom: 68,
           }}
           onScroll={(e) => {
             const scrollTop = e.currentTarget.scrollTop;
-            const scrollHeight = e.currentTarget.scrollHeight;
-            const clientHeight = e.currentTarget.clientHeight;
 
             if (!tickingRef.current) {
               window.requestAnimationFrame(() => {
@@ -1196,33 +1198,6 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
                 } else if (scrollTop <= 15 && isScrolledRef.current) {
                   isScrolledRef.current = false;
                   setIsScrolled(false);
-                }
-
-                // Guard showBottomNav state updates
-                const isAtBottom = scrollHeight - scrollTop - clientHeight < 10;
-                if (isAtBottom) {
-                  if (!showBottomNavRef.current) {
-                    showBottomNavRef.current = true;
-                    setShowBottomNav(true);
-                  }
-                } else {
-                  const diff = scrollTop - lastScrollTop.current;
-                  if (scrollTop < 10) {
-                    if (!showBottomNavRef.current) {
-                      showBottomNavRef.current = true;
-                      setShowBottomNav(true);
-                    }
-                  } else if (diff > 12) {
-                    if (showBottomNavRef.current) {
-                      showBottomNavRef.current = false;
-                      setShowBottomNav(false);
-                    }
-                  } else if (diff < -12) {
-                    if (!showBottomNavRef.current) {
-                      showBottomNavRef.current = true;
-                      setShowBottomNav(true);
-                    }
-                  }
                 }
                 lastScrollTop.current = scrollTop;
                 tickingRef.current = false;
@@ -1575,11 +1550,11 @@ const CustomFlyersIcon = ({ style }: { style?: React.CSSProperties }) => (
 
           {/* ── BOTTOM NAV (Inter Medium 500 / SemiBold 600) ──────────────────────── */}
           <nav
-            className="absolute bottom-0 left-0 right-0 bg-white flex items-center justify-around z-20 transition-transform duration-300 ease-in-out"
+            className="absolute bottom-0 left-0 right-0 bg-white flex items-center justify-around z-20"
             style={{
               borderTop: "1px solid #efefef",
               padding: "6px 8px calc(10px + env(safe-area-inset-bottom, 0px))",
-              transform: showBottomNav ? "translateY(0)" : "translateY(100%)",
+              transform: "translateY(0)",
             }}
           >
             {navItems.map(({ id, label, Icon }) => {
