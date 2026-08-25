@@ -593,7 +593,7 @@ export default function OffersPage({ onOpenProduct, cart, onAdd, onSub, wish, on
                 className="text-[#063D31] font-black leading-[1.1] tracking-tight"
                 style={{ fontSize: 13.5, fontFamily: "'Inter', sans-serif" }}
               >
-                ALPHAGRO<br />Groceries<br />Made Easy.
+                ALPHAGRO<br />Groceries
               </h3>
 
             </div>
